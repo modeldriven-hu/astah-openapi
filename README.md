@@ -1,0 +1,2 @@
+# Astah OpenAPI importer
+
