@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+   <extension point="com.change_vision.astah.ui.actionSets">
+      <actionSet
+            label="%action_set_label"
+            visible="true"
+            id="hu.modeldriven.astah.openapi.actionSet">
+         <menu
+               id="openapi"
+               label="%menu_group"
+               path="tool/openapi">
+         </menu>
+         <action
+			   label="%menu_label"
+               icon="icons/sample.gif"
+               class="hu.modeldriven.astah.openapi.TemplateAction"
+               tooltip="%menu_tooltip"
+               menubarPath="tool/openapi/"
+               id="openapi">
+         </action>
+     </actionSet>
+   </extension>
+</plugin>
