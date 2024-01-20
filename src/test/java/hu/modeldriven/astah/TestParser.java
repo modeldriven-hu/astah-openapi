@@ -1,6 +1,7 @@
 package hu.modeldriven.astah;
 
 import io.swagger.parser.OpenAPIParser;
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
 public class TestParser {
@@ -10,6 +11,8 @@ public class TestParser {
 
         SwaggerParseResult result = parser.readLocation("https://petstore3.swagger.io/api/v3/openapi.json", null, null);
 
-        result.getMessages().forEach(System.out::println);
+        Components components = result.getOpenAPI().getComponents();
+
+        components.getSchemas().keySet().forEach(System.err::println);
     }
 }
