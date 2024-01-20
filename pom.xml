@@ -243,11 +243,7 @@
             <artifactId>swagger-core</artifactId>
             <version>1.6.12</version>
         </dependency>
-        <dependency>
-            <groupId>jakarta.xml.bind</groupId>
-            <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>2.3.3</version>
-        </dependency>
+
         <dependency>
             <groupId>io.swagger</groupId>
             <artifactId>swagger-models</artifactId>
@@ -300,12 +296,19 @@
             <artifactId>swagger-annotations</artifactId>
             <version>2.2.20</version>
         </dependency>
+        -->
+
         <dependency>
             <groupId>io.swagger.parser.v3</groupId>
             <artifactId>swagger-parser-safe-url-resolver</artifactId>
             <version>2.1.20</version>
         </dependency>
-        -->
+
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.3</version>
+        </dependency>
 
         <dependency>
             <groupId>org.mozilla</groupId>
