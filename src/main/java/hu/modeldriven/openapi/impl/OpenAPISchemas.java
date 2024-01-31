@@ -1,6 +1,7 @@
 package hu.modeldriven.openapi.impl;
 
 import hu.modeldriven.openapi.ModelAPI;
+import hu.modeldriven.openapi.ModelBuildingException;
 import io.swagger.v3.oas.models.media.Schema;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ public class OpenAPISchemas {
         this.schemas = schemas;
     }
 
-    public Map<String, OpenAPISchema> build(ModelAPI modelAPI) throws OpenAPIParseException {
+    public Map<String, OpenAPISchema> build(ModelAPI modelAPI) throws ModelBuildingException {
 
         Map<String, OpenAPISchema> builtSchemas = new HashMap<>();
 
@@ -25,7 +26,7 @@ public class OpenAPISchemas {
                 OpenAPISchema openAPISchema = new OpenAPISchema(schema.getValue());
 
                 if (openAPISchema.isResolvable(builtSchemas)){
-                    openAPISchema.build(modelAPI);
+                    openAPISchema.build(modelAPI, builtSchemas);
                     builtSchemas.put(schema.getKey(), openAPISchema);
                 }
             }
@@ -35,7 +36,7 @@ public class OpenAPISchemas {
         } while (builtSchemas.size() != schemas.size() && infiniteLoopCounter < schemas.size());
 
         if (infiniteLoopCounter == schemas.size()){
-            throw new OpenAPIParseException("Infinite loop found for schema " + schemas.toString());
+            throw new ModelBuildingException("Infinite loop found for schema " + schemas.toString());
         }
 
         return builtSchemas;
