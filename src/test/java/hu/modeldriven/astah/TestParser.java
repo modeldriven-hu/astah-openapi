@@ -1,5 +1,6 @@
 package hu.modeldriven.astah;
 
+import hu.modeldriven.openapi.ModelAPI;
 import hu.modeldriven.openapi.impl.OpenAPISchemas;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.Components;
@@ -14,8 +15,10 @@ public class TestParser {
 
         Components components = result.getOpenAPI().getComponents();
 
+        ModelAPI modelAPI = null;
+
         OpenAPISchemas schemas = new OpenAPISchemas(components.getSchemas());
-        schemas.build();
+        schemas.build(modelAPI);
 
         components.getSchemas().keySet().forEach(System.err::println);
     }

@@ -1,9 +1,11 @@
 package hu.modeldriven.openapi;
 
+import io.swagger.models.Model;
+
 import java.io.File;
 
 public interface OpenAPISpecification {
 
-    void transform();
+    void build(ModelAPI modelAPI);
 
 }
