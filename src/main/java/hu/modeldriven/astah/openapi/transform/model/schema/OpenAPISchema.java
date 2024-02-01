@@ -9,9 +9,11 @@ import java.util.Map;
 
 public class OpenAPISchema {
 
+    private final String name;
     private final Schema<?> schema;
 
-    public OpenAPISchema(Schema<?> schema) {
+    public OpenAPISchema(String name, Schema<?> schema) {
+        this.name = name;
         this.schema = schema;
     }
 
@@ -44,6 +46,6 @@ public class OpenAPISchema {
     }
 
     public void build(ModelAPI modelAPI, Map<String, OpenAPISchema> resolvedSchemas) throws ModelBuildingException {
-        modelAPI.createModelType(this.schema, resolvedSchemas);
+        modelAPI.createModelType(this.name, this.schema, resolvedSchemas);
     }
 }

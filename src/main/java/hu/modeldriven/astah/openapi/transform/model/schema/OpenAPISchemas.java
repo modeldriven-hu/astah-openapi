@@ -23,11 +23,14 @@ public class OpenAPISchemas {
 
         do {
             for (Map.Entry<String,Schema> schema : schemas.entrySet()){
-                OpenAPISchema openAPISchema = new OpenAPISchema(schema.getValue());
 
-                if (openAPISchema.isResolvable(builtSchemas)){
-                    openAPISchema.build(modelAPI, builtSchemas);
-                    builtSchemas.put(schema.getKey(), openAPISchema);
+                if (!builtSchemas.containsKey(schema.getKey())) {
+                    OpenAPISchema openAPISchema = new OpenAPISchema(schema.getKey(), schema.getValue());
+
+                    if (openAPISchema.isResolvable(builtSchemas)) {
+                        openAPISchema.build(modelAPI, builtSchemas);
+                        builtSchemas.put(schema.getKey(), openAPISchema);
+                    }
                 }
             }
 

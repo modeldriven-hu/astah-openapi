@@ -10,8 +10,8 @@
         <astah.path>/usr/lib/astah_sysml</astah.path>
     </properties>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>hu.modeldriven.astah</groupId>
-    <artifactId>openapi</artifactId>
+    <groupId>hu.modeldriven</groupId>
+    <artifactId>astah-openapi</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>astah-openapi</name>
