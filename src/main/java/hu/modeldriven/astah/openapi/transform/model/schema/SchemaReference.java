@@ -1,4 +1,4 @@
-package hu.modeldriven.openapi.impl;
+package hu.modeldriven.astah.openapi.transform.model.schema;
 
 import java.util.Arrays;
 

@@ -1,7 +1,7 @@
-package hu.modeldriven.openapi.impl;
+package hu.modeldriven.astah.openapi.transform.model.schema;
 
-import hu.modeldriven.openapi.ModelAPI;
-import hu.modeldriven.openapi.ModelBuildingException;
+import hu.modeldriven.astah.openapi.transform.model.ModelAPI;
+import hu.modeldriven.astah.openapi.transform.model.ModelBuildingException;
 import io.swagger.v3.oas.models.media.Schema;
 
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class OpenAPISchemas {
 
-    private Map<String, Schema> schemas;
+    private final Map<String, Schema> schemas;
 
     public OpenAPISchemas(Map<String, Schema> schemas){
         this.schemas = schemas;

@@ -1,7 +1,7 @@
 package hu.modeldriven.astah;
 
-import hu.modeldriven.openapi.ModelAPI;
-import hu.modeldriven.openapi.impl.OpenAPISchemas;
+import hu.modeldriven.astah.openapi.transform.model.ModelAPI;
+import hu.modeldriven.astah.openapi.transform.model.schema.OpenAPISchemas;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
