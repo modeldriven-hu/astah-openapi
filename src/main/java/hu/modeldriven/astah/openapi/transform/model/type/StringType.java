@@ -1,6 +1,6 @@
 package hu.modeldriven.astah.openapi.transform.model.type;
 
-import hu.modeldriven.astah.openapi.transform.model.ModelBuildingException;
+import hu.modeldriven.astah.openapi.transform.model.modelapi.ModelBuildingException;
 import hu.modeldriven.astah.openapi.transform.model.element.AstahModelElement;
 import hu.modeldriven.astah.openapi.transform.model.resolver.TypeResolver;
 import hu.modeldriven.astah.openapi.transform.model.constraint.NoConstraint;
@@ -24,7 +24,6 @@ public class StringType implements OpenAPIType {
     @Override
     public AstahModelElement create(Schema parent, Schema element) throws ModelBuildingException {
         try {
-
             return new DefaultAstahModelElement(
                     resolver.findCoreTypeByName(TypeResolver.CoreType.STRING),
                     new NoConstraint());

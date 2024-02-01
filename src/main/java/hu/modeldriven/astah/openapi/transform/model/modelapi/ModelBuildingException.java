@@ -1,4 +1,4 @@
-package hu.modeldriven.astah.openapi.transform.model;
+package hu.modeldriven.astah.openapi.transform.model.modelapi;
 
 public class ModelBuildingException extends Exception {
 

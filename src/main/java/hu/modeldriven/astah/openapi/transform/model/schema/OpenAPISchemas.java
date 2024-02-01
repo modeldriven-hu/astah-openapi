@@ -1,7 +1,7 @@
 package hu.modeldriven.astah.openapi.transform.model.schema;
 
-import hu.modeldriven.astah.openapi.transform.model.ModelAPI;
-import hu.modeldriven.astah.openapi.transform.model.ModelBuildingException;
+import hu.modeldriven.astah.openapi.transform.model.modelapi.ModelAPI;
+import hu.modeldriven.astah.openapi.transform.model.modelapi.ModelBuildingException;
 import io.swagger.v3.oas.models.media.Schema;
 
 import java.util.HashMap;

@@ -1,4 +1,4 @@
-package hu.modeldriven.astah.openapi.transform.model;
+package hu.modeldriven.astah.openapi.transform.model.modelapi;
 
 import com.change_vision.jude.api.inf.editor.SysmlModelEditor;
 import com.change_vision.jude.api.inf.model.IBlock;
@@ -14,13 +14,13 @@ import java.util.Map;
 
 public class AstahModelAPI implements ModelAPI {
 
-    private final IPackage rootPackage;
+    private final IPackage targetPackage;
     private final SysmlModelEditor editor;
 
     private final List<OpenAPIType> openAPITypes;
 
-    public AstahModelAPI(IPackage rootPackage, SysmlModelEditor editor, List<OpenAPIType> openAPITypes) {
-        this.rootPackage = rootPackage;
+    public AstahModelAPI(IPackage targetPackage, SysmlModelEditor editor, List<OpenAPIType> openAPITypes) {
+        this.targetPackage = targetPackage;
         this.editor = editor;
         this.openAPITypes = openAPITypes;
     }
@@ -29,7 +29,7 @@ public class AstahModelAPI implements ModelAPI {
     public String createModelType(Schema<?> schema, Map<String, OpenAPISchema> resolvedSchemas) throws ModelBuildingException {
 
         try {
-            IBlock block = editor.createBlock(rootPackage, schema.getName());
+            IBlock block = editor.createBlock(targetPackage, schema.getName());
             block.setDefinition(schema.getDescription());
 
             for (Map.Entry<String, Schema> property : schema.getProperties().entrySet()) {

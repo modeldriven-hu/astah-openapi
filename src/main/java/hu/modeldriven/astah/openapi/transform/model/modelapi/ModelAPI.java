@@ -1,4 +1,4 @@
-package hu.modeldriven.astah.openapi.transform.model;
+package hu.modeldriven.astah.openapi.transform.model.modelapi;
 
 import hu.modeldriven.astah.openapi.transform.model.schema.OpenAPISchema;
 import io.swagger.v3.oas.models.media.Schema;
