@@ -9,7 +9,7 @@ public class ChainedConstraint implements AstahConstraint {
 
     private final List<AstahConstraint> constraints;
 
-    public ChainedConstraint(AstahConstraint ... constraints) {
+    public ChainedConstraint(AstahConstraint... constraints) {
         this.constraints = Arrays.asList(constraints);
     }
 

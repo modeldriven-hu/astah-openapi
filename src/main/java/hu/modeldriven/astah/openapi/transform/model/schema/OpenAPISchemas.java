@@ -11,7 +11,7 @@ public class OpenAPISchemas {
 
     private final Map<String, Schema> schemas;
 
-    public OpenAPISchemas(Map<String, Schema> schemas){
+    public OpenAPISchemas(Map<String, Schema> schemas) {
         this.schemas = schemas;
     }
 
@@ -22,13 +22,13 @@ public class OpenAPISchemas {
         int infiniteLoopCounter = 0;
 
         do {
-            for (Map.Entry<String,Schema> schema : schemas.entrySet()){
+            for (Map.Entry<String, Schema> schema : schemas.entrySet()) {
 
                 if (!builtSchemas.containsKey(schema.getKey())) {
                     OpenAPISchema openAPISchema = new OpenAPISchema(schema.getKey(), schema.getValue());
 
                     if (openAPISchema.isResolvable(builtSchemas)) {
-                        openAPISchema.build(modelAPI, builtSchemas);
+                        openAPISchema.build(modelAPI);
                         builtSchemas.put(schema.getKey(), openAPISchema);
                     }
                 }
@@ -38,8 +38,8 @@ public class OpenAPISchemas {
 
         } while (builtSchemas.size() != schemas.size() && infiniteLoopCounter < schemas.size());
 
-        if (infiniteLoopCounter == schemas.size()){
-            throw new ModelBuildingException("Infinite loop found for schema " + schemas.toString());
+        if (infiniteLoopCounter == schemas.size()) {
+            throw new ModelBuildingException("Infinite loop found for schema " + schemas);
         }
 
         return builtSchemas;

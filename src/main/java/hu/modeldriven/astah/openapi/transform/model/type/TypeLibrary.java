@@ -8,7 +8,7 @@ import java.util.List;
 
 public class TypeLibrary {
 
-    public List<OpenAPIType> getTypes(){
+    public List<OpenAPIType> getTypes() {
         TypeResolver resolver = new AstahTypeResolver();
 
         return Arrays.asList(

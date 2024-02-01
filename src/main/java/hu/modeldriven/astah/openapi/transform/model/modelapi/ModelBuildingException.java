@@ -6,7 +6,7 @@ public class ModelBuildingException extends Exception {
         super(message);
     }
 
-    public ModelBuildingException(Exception e){
+    public ModelBuildingException(Exception e) {
         super(e);
     }
 

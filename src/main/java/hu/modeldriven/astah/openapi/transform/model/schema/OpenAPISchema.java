@@ -19,7 +19,7 @@ public class OpenAPISchema {
 
     public boolean isResolvable(Map<String, OpenAPISchema> resolvedSchemas) throws ModelBuildingException {
 
-        for (Schema<?> type : schema.getProperties().values()){
+        for (Schema<?> type : schema.getProperties().values()) {
             if (isReferenceNotResolvable(type, resolvedSchemas)) {
                 return false;
             }
@@ -28,7 +28,7 @@ public class OpenAPISchema {
         return true;
     }
 
-    private boolean isReferenceNotResolvable(Schema<?> type, Map<String, OpenAPISchema> resolvedItems) throws ModelBuildingException{
+    private boolean isReferenceNotResolvable(Schema<?> type, Map<String, OpenAPISchema> resolvedItems) throws ModelBuildingException {
 
         Schema<?> schema = (type instanceof ArraySchema) ? type.getItems() : type;
 
@@ -36,7 +36,7 @@ public class OpenAPISchema {
             String schemaName = new SchemaReference(schema.get$ref()).getName();
 
             if (schemaName != null) {
-                return !resolvedItems.keySet().contains(schemaName);
+                return !resolvedItems.containsKey(schemaName);
             } else {
                 throw new ModelBuildingException("Wrong schema reference format:  " + schema.get$ref());
             }
@@ -45,7 +45,7 @@ public class OpenAPISchema {
         return false;
     }
 
-    public void build(ModelAPI modelAPI, Map<String, OpenAPISchema> resolvedSchemas) throws ModelBuildingException {
-        modelAPI.createModelType(this.name, this.schema, resolvedSchemas);
+    public void build(ModelAPI modelAPI) throws ModelBuildingException {
+        modelAPI.createModelType(this.name, this.schema);
     }
 }

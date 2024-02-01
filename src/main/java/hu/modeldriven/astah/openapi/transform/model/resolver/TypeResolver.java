@@ -4,10 +4,10 @@ import com.change_vision.jude.api.inf.model.IValueType;
 
 public interface TypeResolver {
 
-    public enum CoreType {
+    IValueType findCoreTypeByName(CoreType coreType) throws TypeNotFoundException;
+
+    enum CoreType {
         BOOLEAN, INTEGER, STRING, DATETIME
     }
-
-    IValueType findCoreTypeByName(CoreType coreType) throws TypeNotFoundException;
 
 }

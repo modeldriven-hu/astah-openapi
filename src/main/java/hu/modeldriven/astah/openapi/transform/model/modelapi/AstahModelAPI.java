@@ -5,7 +5,6 @@ import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueAttribute;
 import hu.modeldriven.astah.openapi.transform.model.element.AstahModelElement;
-import hu.modeldriven.astah.openapi.transform.model.schema.OpenAPISchema;
 import hu.modeldriven.astah.openapi.transform.model.type.OpenAPIType;
 import io.swagger.v3.oas.models.media.Schema;
 
@@ -26,7 +25,7 @@ public class AstahModelAPI implements ModelAPI {
     }
 
     @Override
-    public String createModelType(String modelName, Schema<?> schema, Map<String, OpenAPISchema> resolvedSchemas) throws ModelBuildingException {
+    public String createModelType(String modelName, Schema<?> schema) throws ModelBuildingException {
 
         try {
             System.err.println("Creating model type: " + modelName);

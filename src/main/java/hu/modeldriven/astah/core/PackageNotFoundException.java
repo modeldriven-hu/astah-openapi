@@ -2,7 +2,7 @@ package hu.modeldriven.astah.core;
 
 public class PackageNotFoundException extends Exception {
 
-    public PackageNotFoundException(Exception e){
+    public PackageNotFoundException(Exception e) {
         super(e);
     }
 

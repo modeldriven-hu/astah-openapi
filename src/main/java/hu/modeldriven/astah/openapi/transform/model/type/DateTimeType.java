@@ -7,7 +7,6 @@ import hu.modeldriven.astah.openapi.transform.model.resolver.TypeNotFoundExcepti
 import hu.modeldriven.astah.openapi.transform.model.resolver.TypeResolver;
 import io.swagger.v3.oas.models.media.DateTimeSchema;
 import io.swagger.v3.oas.models.media.Schema;
-import io.swagger.v3.oas.models.media.StringSchema;
 
 public class DateTimeType implements OpenAPIType {
 

@@ -12,7 +12,7 @@ public class AstahModel {
 
     private final ProjectAccessor projectAccessor;
 
-    public AstahModel(){
+    public AstahModel() {
         try {
             this.projectAccessor = AstahAPI.getAstahAPI().getProjectAccessor();
         } catch (ClassNotFoundException e) {
@@ -24,8 +24,8 @@ public class AstahModel {
 
         IPackage rootPackage = this.findPackage(path);
 
-        for (INamedElement element : rootPackage.getOwnedElements()){
-            if (name.equals(element.getName()) && typeClass.isInstance(element)){
+        for (INamedElement element : rootPackage.getOwnedElements()) {
+            if (name.equals(element.getName()) && typeClass.isInstance(element)) {
                 return typeClass.cast(element);
             }
         }
@@ -37,7 +37,7 @@ public class AstahModel {
         try {
             IPackage root = projectAccessor.getProject();
             return findPackage(root, path);
-        } catch (ProjectNotFoundException e){
+        } catch (ProjectNotFoundException e) {
             throw new PackageNotFoundException(e);
         }
     }

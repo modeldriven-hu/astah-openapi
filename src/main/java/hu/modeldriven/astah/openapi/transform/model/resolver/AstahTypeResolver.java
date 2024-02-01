@@ -9,7 +9,7 @@ public class AstahTypeResolver implements TypeResolver {
     public static final String OPEN_API_PATH = "OpenAPI";
     private final AstahModel model;
 
-    public AstahTypeResolver(){
+    public AstahTypeResolver() {
         this.model = new AstahModel();
     }
 
