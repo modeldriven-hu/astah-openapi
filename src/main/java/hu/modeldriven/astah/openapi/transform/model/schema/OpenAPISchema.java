@@ -1,5 +1,6 @@
 package hu.modeldriven.astah.openapi.transform.model.schema;
 
+import com.change_vision.jude.api.inf.model.INamedElement;
 import hu.modeldriven.astah.openapi.transform.model.modelapi.ModelAPI;
 import hu.modeldriven.astah.openapi.transform.model.modelapi.ModelBuildingException;
 import io.swagger.v3.oas.models.media.ArraySchema;
@@ -11,6 +12,8 @@ public class OpenAPISchema {
 
     private final String name;
     private final Schema<?> schema;
+
+    private INamedElement element;
 
     public OpenAPISchema(String name, Schema<?> schema) {
         this.name = name;
@@ -45,7 +48,11 @@ public class OpenAPISchema {
         return false;
     }
 
-    public void build(ModelAPI modelAPI) throws ModelBuildingException {
-        modelAPI.createModelType(this.name, this.schema);
+    public void build(ModelAPI modelAPI, Map<String, OpenAPISchema> resolvedSchemas) throws ModelBuildingException {
+        this.element = modelAPI.createModelType(this.name, this.schema, resolvedSchemas);
+    }
+
+    public INamedElement getElement() {
+        return element;
     }
 }

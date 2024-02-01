@@ -28,7 +28,7 @@ public class OpenAPISchemas {
                     OpenAPISchema openAPISchema = new OpenAPISchema(schema.getKey(), schema.getValue());
 
                     if (openAPISchema.isResolvable(builtSchemas)) {
-                        openAPISchema.build(modelAPI);
+                        openAPISchema.build(modelAPI, builtSchemas);
                         builtSchemas.put(schema.getKey(), openAPISchema);
                     }
                 }

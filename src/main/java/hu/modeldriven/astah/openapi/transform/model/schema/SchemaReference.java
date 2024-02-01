@@ -10,7 +10,7 @@ public class SchemaReference {
         this.reference = reference;
     }
 
-    String getName() {
+    public String getName() {
         return Arrays.stream(reference.split("/"))
                 .reduce((first, second) -> second)
                 .orElse(null);

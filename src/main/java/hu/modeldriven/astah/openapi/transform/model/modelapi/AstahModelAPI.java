@@ -1,10 +1,15 @@
 package hu.modeldriven.astah.openapi.transform.model.modelapi;
 
 import com.change_vision.jude.api.inf.editor.SysmlModelEditor;
+import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IBlock;
+import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueAttribute;
 import hu.modeldriven.astah.openapi.transform.model.element.AstahModelElement;
+import hu.modeldriven.astah.openapi.transform.model.resolver.TypeNotFoundException;
+import hu.modeldriven.astah.openapi.transform.model.schema.OpenAPISchema;
+import hu.modeldriven.astah.openapi.transform.model.schema.SchemaReference;
 import hu.modeldriven.astah.openapi.transform.model.type.OpenAPIType;
 import io.swagger.v3.oas.models.media.Schema;
 
@@ -25,53 +30,65 @@ public class AstahModelAPI implements ModelAPI {
     }
 
     @Override
-    public String createModelType(String modelName, Schema<?> schema) throws ModelBuildingException {
+    public INamedElement createModelType(String modelName, Schema<?> schema, Map<String, OpenAPISchema> createdElements) throws ModelBuildingException {
 
         try {
             System.err.println("Creating model type: " + modelName);
 
             IBlock block = editor.createBlock(targetPackage, modelName);
 
+            // Create attributes
+
             for (Map.Entry<String, Schema> property : schema.getProperties().entrySet()) {
 
-                String name = property.getKey();
-                Schema<?> type = property.getValue();
+                String attributeName = property.getKey();
+                Schema<?> attributeType = property.getValue();
 
-                System.err.println("Searching type for attribute: " + name);
+                System.err.println("Searching type for attribute: " + attributeName);
 
-                boolean found = false;
+                handleBasicTypes(block, schema, attributeName, attributeType);
 
-                // Handle basic types
+                System.err.println("Searching reference for attribute: " + attributeName);
 
-                for (OpenAPIType openAPIType : openAPITypes) {
+                handleReference(block, createdElements, attributeType);
 
-                    if (openAPIType.appliesTo(type)) {
-
-                        System.err.println("Found basic type for attribute: " + name);
-
-                        AstahModelElement modelElement = openAPIType.create(schema, type);
-                        IValueAttribute attribute = editor.createValueAttribute(block, name, modelElement.getType());
-                        modelElement.getConstraint().apply(attribute);
-                        found = true;
-                        break;
-                    }
-                }
-
-                // Handle reference
-
-
-                // Handle array
-
-                if (!found) {
-                    System.err.println("Type " + type + " not implemented.");
-                }
             }
 
-            return block.getId();
+            return block;
 
         } catch (Exception e) {
             throw new ModelBuildingException(e);
         }
+    }
+
+    private void handleBasicTypes(IBlock owner, Schema<?> ownerSchema, String attributeName, Schema<?> attributeType) throws InvalidEditingException, TypeNotFoundException {
+
+        for (OpenAPIType openAPIType : openAPITypes) {
+
+            if (openAPIType.appliesTo(attributeType)) {
+
+                System.err.println("Found basic type for attribute: " + attributeName);
+
+                AstahModelElement modelElement = openAPIType.create(ownerSchema, attributeType);
+                IValueAttribute attribute = editor.createValueAttribute(owner, attributeName, modelElement.getType());
+                modelElement.getConstraint().apply(attribute);
+                break;
+            }
+        }
+    }
+
+    private void handleReference(IBlock owner, Map<String, OpenAPISchema> createdElements, Schema<?> attributeType){
+        if (attributeType.get$ref() !=null){
+            SchemaReference reference = new SchemaReference(attributeType.get$ref());
+
+            if (createdElements.containsKey(reference.getName())){
+                INamedElement associatedElement = createdElements.get(reference.getName()).getElement();
+                System.out.println(associatedElement);
+            } else {
+                System.err.println("Reference type " + attributeType + " not found.");
+            }
+        }
+
     }
 
 }
