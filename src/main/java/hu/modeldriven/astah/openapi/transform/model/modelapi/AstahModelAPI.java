@@ -77,11 +77,11 @@ public class AstahModelAPI implements ModelAPI {
         }
     }
 
-    private void handleReference(IBlock owner, Map<String, OpenAPISchema> createdElements, Schema<?> attributeType){
-        if (attributeType.get$ref() !=null){
+    private void handleReference(IBlock owner, Map<String, OpenAPISchema> createdElements, Schema<?> attributeType) {
+        if (attributeType.get$ref() != null) {
             SchemaReference reference = new SchemaReference(attributeType.get$ref());
 
-            if (createdElements.containsKey(reference.getName())){
+            if (createdElements.containsKey(reference.getName())) {
                 INamedElement associatedElement = createdElements.get(reference.getName()).getElement();
                 System.out.println(associatedElement);
             } else {
