@@ -29,29 +29,26 @@ public class AstahModelAPI implements ModelAPI {
     public String createModelType(String modelName, Schema<?> schema, Map<String, OpenAPISchema> resolvedSchemas) throws ModelBuildingException {
 
         try {
-
-            System.err.println("Create block in package " +
-                    targetPackage.getId() + ", " +
-                    targetPackage.getName());
-
-            System.err.println("Model name was: " + modelName);
+            System.err.println("Creating model type: " + modelName);
 
             IBlock block = editor.createBlock(targetPackage, modelName);
-
-            System.err.println("Block was created: " + block.getId());
 
             for (Map.Entry<String, Schema> property : schema.getProperties().entrySet()) {
 
                 String name = property.getKey();
                 Schema<?> type = property.getValue();
 
+                System.err.println("Searching type for attribute: " + name);
+
                 boolean found = false;
+
+                // Handle basic types
 
                 for (OpenAPIType openAPIType : openAPITypes) {
 
                     if (openAPIType.appliesTo(type)) {
 
-                        System.err.println("Creating attribute for name: " + name);
+                        System.err.println("Found basic type for attribute: " + name);
 
                         AstahModelElement modelElement = openAPIType.create(schema, type);
                         IValueAttribute attribute = editor.createValueAttribute(block, name, modelElement.getType());
@@ -60,6 +57,11 @@ public class AstahModelAPI implements ModelAPI {
                         break;
                     }
                 }
+
+                // Handle reference
+
+
+                // Handle array
 
                 if (!found) {
                     System.err.println("Type " + type + " not implemented.");

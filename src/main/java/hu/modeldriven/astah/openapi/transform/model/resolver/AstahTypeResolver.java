@@ -29,6 +29,9 @@ public class AstahTypeResolver implements TypeResolver {
                 case INTEGER:
                     return model.findElementByPath(OPEN_API_PATH, "Integer", IValueType.class);
 
+                case DATETIME:
+                    return model.findElementByPath(OPEN_API_PATH, "DateTime", IValueType.class);
+
             }
 
         } catch (PackageNotFoundException e) {

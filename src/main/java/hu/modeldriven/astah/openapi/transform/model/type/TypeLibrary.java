@@ -15,7 +15,9 @@ public class TypeLibrary {
                 new StringType(resolver),
                 new BooleanType(resolver),
                 new Integer32Type(resolver),
-                new Integer64Type(resolver));
+                new Integer64Type(resolver),
+                new DateTimeType(resolver)
+        );
     }
 
 }

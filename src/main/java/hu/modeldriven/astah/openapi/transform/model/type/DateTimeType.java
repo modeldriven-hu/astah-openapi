@@ -5,26 +5,27 @@ import hu.modeldriven.astah.openapi.transform.model.element.AstahModelElement;
 import hu.modeldriven.astah.openapi.transform.model.element.DefaultAstahModelElement;
 import hu.modeldriven.astah.openapi.transform.model.resolver.TypeNotFoundException;
 import hu.modeldriven.astah.openapi.transform.model.resolver.TypeResolver;
-import io.swagger.v3.oas.models.media.IntegerSchema;
+import io.swagger.v3.oas.models.media.DateTimeSchema;
 import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
 
-public class Integer64Type implements OpenAPIType {
+public class DateTimeType implements OpenAPIType {
 
     private final TypeResolver resolver;
 
-    public Integer64Type(TypeResolver resolver) {
+    public DateTimeType(TypeResolver resolver) {
         this.resolver = resolver;
     }
 
     @Override
     public boolean appliesTo(Schema schema) {
-        return schema instanceof IntegerSchema && "int64".equals(schema.getFormat());
+        return schema instanceof DateTimeSchema && "date-time".equals(schema.getFormat());
     }
 
     @Override
     public AstahModelElement create(Schema parent, Schema element) throws TypeNotFoundException {
         return new DefaultAstahModelElement(
-                resolver.findCoreTypeByName(TypeResolver.CoreType.INTEGER),
+                resolver.findCoreTypeByName(TypeResolver.CoreType.DATETIME),
                 new NoConstraint());
     }
 }
