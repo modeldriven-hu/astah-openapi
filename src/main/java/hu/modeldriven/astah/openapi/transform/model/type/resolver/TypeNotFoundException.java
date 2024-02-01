@@ -1,4 +1,4 @@
-package hu.modeldriven.astah.openapi.transform.model.resolver;
+package hu.modeldriven.astah.openapi.transform.model.type.resolver;
 
 public class TypeNotFoundException extends Exception {
 

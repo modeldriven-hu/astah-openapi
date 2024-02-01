@@ -1,7 +1,7 @@
 package hu.modeldriven.astah.openapi.transform.model.type;
 
-import hu.modeldriven.astah.openapi.transform.model.resolver.AstahTypeResolver;
-import hu.modeldriven.astah.openapi.transform.model.resolver.TypeResolver;
+import hu.modeldriven.astah.openapi.transform.model.type.resolver.AstahTypeResolver;
+import hu.modeldriven.astah.openapi.transform.model.type.resolver.TypeResolver;
 
 import java.util.Arrays;
 import java.util.List;

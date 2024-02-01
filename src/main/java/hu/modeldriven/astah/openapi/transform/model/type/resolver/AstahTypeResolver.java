@@ -1,4 +1,4 @@
-package hu.modeldriven.astah.openapi.transform.model.resolver;
+package hu.modeldriven.astah.openapi.transform.model.type.resolver;
 
 import com.change_vision.jude.api.inf.model.IValueType;
 import hu.modeldriven.astah.core.AstahModel;
@@ -14,7 +14,7 @@ public class AstahTypeResolver implements TypeResolver {
     }
 
     @Override
-    public IValueType findCoreTypeByName(CoreType coreType) throws TypeNotFoundException {
+    public IValueType findByName(CoreType coreType) throws TypeNotFoundException {
 
         try {
 

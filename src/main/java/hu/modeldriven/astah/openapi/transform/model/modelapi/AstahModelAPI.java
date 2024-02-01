@@ -7,7 +7,7 @@ import com.change_vision.jude.api.inf.model.INamedElement;
 import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueAttribute;
 import hu.modeldriven.astah.openapi.transform.model.element.AstahModelElement;
-import hu.modeldriven.astah.openapi.transform.model.resolver.TypeNotFoundException;
+import hu.modeldriven.astah.openapi.transform.model.type.resolver.TypeNotFoundException;
 import hu.modeldriven.astah.openapi.transform.model.schema.OpenAPISchema;
 import hu.modeldriven.astah.openapi.transform.model.schema.SchemaReference;
 import hu.modeldriven.astah.openapi.transform.model.type.OpenAPIType;

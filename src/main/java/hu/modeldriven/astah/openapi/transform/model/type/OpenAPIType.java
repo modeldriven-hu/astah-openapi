@@ -1,7 +1,7 @@
 package hu.modeldriven.astah.openapi.transform.model.type;
 
 import hu.modeldriven.astah.openapi.transform.model.element.AstahModelElement;
-import hu.modeldriven.astah.openapi.transform.model.resolver.TypeNotFoundException;
+import hu.modeldriven.astah.openapi.transform.model.type.resolver.TypeNotFoundException;
 import io.swagger.v3.oas.models.media.Schema;
 
 public interface OpenAPIType {
