@@ -9,31 +9,29 @@ import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IValueType;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
-/**
- * Unit test for simple App.
- */
+@RunWith(MockitoJUnitRunner.class)
 public class AppTest {
 
-    public static void main(String[] args) throws Exception {
+    @Test
+    public void testParse() throws Exception {
         OpenAPIParser parser = new OpenAPIParser();
 
         SwaggerParseResult result = parser.readLocation("https://petstore3.swagger.io/api/v3/openapi.json", null, null);
 
-        //SwaggerParseResult result = parser.readLocation("https://binance.github.io/binance-api-swagger/spot_api.yaml", null, null);
-
         OpenAPIObject openAPIObject = new OpenAPIObject(result.getOpenAPI());
 
-        var projectAccessor = Mockito.mock(ProjectAccessor.class);
-        var modelEditor = Mockito.mock(SysmlModelEditor.class);
-
-        var astahRepresentation = Mockito.mock(AstahRepresentation.class);
+        AstahRepresentation astahRepresentation = Mockito.mock(AstahRepresentation.class);
 
         when(astahRepresentation.createBlock(any(), any())).thenReturn(Mockito.mock(IBlock.class));
         when(astahRepresentation.createValueAttribute(any(), any(), any())).thenReturn(Mockito.mock(IAttribute.class));
@@ -45,9 +43,11 @@ public class AppTest {
         when(astahRepresentation.findElementByPath(any(), eq("DateTime"), any())).thenReturn(Mockito.mock(IValueType.class));
         when(astahRepresentation.findElementByPath(any(), eq("Number"), any())).thenReturn(Mockito.mock(IValueType.class));
 
+        TypeResolver resolver = new TypeResolver(astahRepresentation);
+
         BuildInstruction instruction = Mockito.mock(BuildInstruction.class);
         when(instruction.astah()).thenReturn(astahRepresentation);
-        when(instruction.typeResolver()).thenReturn(new TypeResolver(astahRepresentation));
+        when(instruction.typeResolver()).thenReturn(resolver);
 
         openAPIObject.build(instruction);
     }
