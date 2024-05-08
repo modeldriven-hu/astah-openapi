@@ -2,6 +2,7 @@ package hu.modeldriven.openapi;
 
 import astah.AstahRepresentation;
 import astah.AstahRuntimeException;
+import com.change_vision.jude.api.inf.editor.IDiagramEditorFactory;
 import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IPackage;
@@ -76,27 +77,15 @@ public class TypeResolver {
 
     private IClass resolveCoreType(Schema<?> schema) {
 
-        if (schema instanceof DateTimeSchema) {
-            return findByTypeName(astah, "DateTime");
-        }
+        return switch (schema){
+            case DateTimeSchema d -> findByTypeName(astah, "DateTime");
+            case StringSchema s -> findByTypeName(astah, "String");
+            case BooleanSchema b -> findByTypeName(astah, "Boolean");
+            case IntegerSchema i -> findByTypeName(astah, "Integer");
+            case NumberSchema n -> findByTypeName(astah, "Number");
+            default -> null;
+        };
 
-        if (schema instanceof StringSchema) {
-            return findByTypeName(astah, "String");
-        }
-
-        if (schema instanceof BooleanSchema) {
-            return findByTypeName(astah, "Boolean");
-        }
-
-        if (schema instanceof IntegerSchema) {
-            return findByTypeName(astah, "Integer");
-        }
-
-        if (schema instanceof NumberSchema) {
-            return findByTypeName(astah, "Number");
-        }
-
-        return null;
     }
 
     private IValueType findByTypeName(AstahRepresentation astah, String typeName) {
