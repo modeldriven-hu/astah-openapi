@@ -23,7 +23,7 @@ public class ComponentSchemas {
         this.schemaObjects = new LinkedHashMap<>();
         this.schemaArrays = new LinkedHashMap<>();
 
-        for (Map.Entry<String, Schema> entry : schemas.entrySet()) {
+        for (var entry : schemas.entrySet()) {
             if (entry.getValue() instanceof ObjectSchema) {
                 schemaObjects.put(entry.getKey(), new SchemaObject(entry.getValue()));
             } else if (entry.getValue() instanceof ArraySchema) {
@@ -43,23 +43,22 @@ public class ComponentSchemas {
             // First we create the schema objects
 
             // order entries by resolvability
-            Map<String, SchemaObject> orderedSchemaObjects = orderByResolvability(schemaObjects);
-
-            Map<String, IBlock> modelElements = new LinkedHashMap<>();
+            var orderedSchemaObjects = orderByResolvability(schemaObjects);
+            var modelElements = new LinkedHashMap<String, IBlock>();
 
             // create model representation
-            for (Map.Entry<String, SchemaObject> entry : orderedSchemaObjects.entrySet()) {
+            for (var entry : orderedSchemaObjects.entrySet()) {
 
                 logger.info("[ComponentSchemas.class] Building schema: {}", entry.getKey());
 
                 // Create frame as a SysML block
 
-                IBlock block = instruction.astah().createBlock(instruction.targetPackage(), entry.getKey());
+                var block = instruction.astah().createBlock(instruction.targetPackage(), entry.getKey());
                 modelElements.put(entry.getKey(), block);
 
                 // Create inner parts of the block, like fields
 
-                SchemaObject schemaObject = entry.getValue();
+                var schemaObject = entry.getValue();
                 schemaObject.build(block, instruction, modelElements);
             }
 
@@ -81,16 +80,16 @@ public class ComponentSchemas {
 
     private Map<String, SchemaObject> orderByResolvability(Map<String, SchemaObject> schemaObjects) throws ModelBuildingException {
 
-        Map<String, SchemaObject> orderedSchemaObjects = new LinkedHashMap<>();
+        var orderedSchemaObjects = new LinkedHashMap<String, SchemaObject>();
 
-        int infiniteLoopCounter = 0;
+        var infiniteLoopCounter = 0;
 
         do {
 
-            for (Map.Entry<String, SchemaObject> entry : schemaObjects.entrySet()) {
+            for (var entry : schemaObjects.entrySet()) {
 
-                String schemaName = entry.getKey();
-                SchemaObject schemaObject = entry.getValue();
+                var schemaName = entry.getKey();
+                var schemaObject = entry.getValue();
 
                 if (!orderedSchemaObjects.containsKey(schemaName)) {
 

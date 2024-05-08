@@ -23,7 +23,7 @@ public class BuildInstruction {
      }
 
     private List<SchemaPropertyMetadata> createSchemaPropertyMetadata(AstahRepresentation astahRepresentation) {
-        List<SchemaPropertyMetadata> result = new ArrayList<>();
+        var result = new ArrayList<SchemaPropertyMetadata>();
         result.add(new MultiplicityMetadata(astahRepresentation));
         return result;
     }

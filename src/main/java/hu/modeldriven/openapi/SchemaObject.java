@@ -28,7 +28,7 @@ public class SchemaObject {
 
     public boolean isResolvable(Set<String> resolvedSchemaNames) {
 
-        for (SchemaProperty property : schemaProperties.values()) {
+        for (var property : schemaProperties.values()) {
             if (!property.isResolvable(resolvedSchemaNames)) {
                 return false;
             }
@@ -40,7 +40,7 @@ public class SchemaObject {
     public void build(IBlock owner, BuildInstruction instruction, Map<String, IBlock> modelElements) {
         // it depends on the type of the property of what kind of connection has to be built
 
-        for (Map.Entry<String, SchemaProperty> entry : schemaProperties.entrySet()) {
+        for (var entry : schemaProperties.entrySet()) {
 
             logger.info("\t[SchemaObject] Building property: {}", entry.getKey());
 

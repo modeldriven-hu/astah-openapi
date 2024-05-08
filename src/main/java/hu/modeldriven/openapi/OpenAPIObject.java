@@ -11,7 +11,6 @@ public class OpenAPIObject {
     }
 
     public void build(BuildInstruction instruction) throws ModelBuildingException {
-
         this.components.build(instruction);
     }
 

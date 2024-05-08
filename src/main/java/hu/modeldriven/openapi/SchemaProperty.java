@@ -39,9 +39,8 @@ public class SchemaProperty {
     }
 
     public void build(String name, Schema<?> blockSchema, IBlock owner, BuildInstruction instruction, Map<String, IBlock> modelElements) {
-        AstahRepresentation astah = instruction.astah();
-
-        IClass type = instruction.typeResolver().resolve(schema, modelElements);
+        var astah = instruction.astah();
+        var type = instruction.typeResolver().resolve(schema, modelElements);
 
         if (type == null && !(schema instanceof ObjectSchema || schema instanceof ArraySchema)) {
             logger.info("***** [SchemaProperty.class] Type not supported: {}", schema);

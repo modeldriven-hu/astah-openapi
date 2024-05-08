@@ -31,7 +31,7 @@ public class TypeResolver {
         try {
             astah.beginTransaction();
 
-            IPackage typePackage = astah.findOrCreatePackage(OPEN_API_PATH);
+            var typePackage = astah.findOrCreatePackage(OPEN_API_PATH);
 
             Stream.of("DateTime", "String", "Boolean", "Integer", "Number")
                     .forEach(name -> {
@@ -51,7 +51,7 @@ public class TypeResolver {
 
         if (isArray(schema)) {
             if (hasArrayReference(schema)) {
-                String name = getReferenceTypeNameOfArray(schema);
+                var name = getReferenceTypeNameOfArray(schema);
                 return modelElements.get(name);
             } else if (hasArrayObject(schema)) {
                 // FIXME not implemented
@@ -124,7 +124,7 @@ public class TypeResolver {
     }
 
     private String getReferenceTypeNameOfArray(Schema<?> schema) {
-        Schema<?> items = schema.getItems();
+        var items = schema.getItems();
 
         if (items.get$ref() != null) {
             return new SchemaReference(items).getName();

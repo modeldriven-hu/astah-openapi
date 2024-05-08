@@ -9,7 +9,6 @@ import hu.modeldriven.openapi.BuildInstruction;
 import hu.modeldriven.openapi.ModelBuildingException;
 import hu.modeldriven.openapi.OpenAPIObject;
 import io.swagger.parser.OpenAPIParser;
-import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
 import java.io.File;
 
@@ -21,18 +20,19 @@ public class ImportOpenAPIAction implements IPluginActionDelegate {
 		var fileChooser = new JFileChooser();
 		fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 
-		int fileSelectionResult = fileChooser.showOpenDialog(window.getParent());
+		var fileSelectionResult = fileChooser.showOpenDialog(window.getParent());
 
 		if (fileSelectionResult == JFileChooser.APPROVE_OPTION) {
 			var selectedFile = fileChooser.getSelectedFile();
 
 			JOptionPane.showMessageDialog(null, "Reading file: " + selectedFile.getAbsolutePath());
 
-			OpenAPIParser parser = new OpenAPIParser();
-			SwaggerParseResult result = parser.readLocation(selectedFile.getAbsolutePath(), null, null);
-			OpenAPIObject openAPIObject = new OpenAPIObject(result.getOpenAPI());
+			var parser = new OpenAPIParser();
+			var result = parser.readLocation(selectedFile.getAbsolutePath(), null, null);
+			var openAPIObject = new OpenAPIObject(result.getOpenAPI());
+
 			try {
-				AstahRepresentation representation = new AstahRepresentation();
+				var representation = new AstahRepresentation();
 				var targetPackage = representation.findPackage("api");
 				openAPIObject.build(new BuildInstruction(targetPackage));
 			} catch (ModelBuildingException e) {
@@ -40,6 +40,7 @@ public class ImportOpenAPIAction implements IPluginActionDelegate {
 			}
 
 		}
+
         return null;
     }
 }
