@@ -15,17 +15,15 @@ public class BuildInstruction {
     private final TypeResolver typeResolver;
     private final List<SchemaPropertyMetadata> schemaPropertyMetadata;
 
-    public BuildInstruction(IPackage targetPackage) {
+    public BuildInstruction(IPackage targetPackage, AstahRepresentation astah) {
         this.targetPackage = targetPackage;
-        this.astah = new AstahRepresentation();
+        this.astah = astah;
         this.typeResolver = new TypeResolver(astah);
         this.schemaPropertyMetadata = createSchemaPropertyMetadata(astah);
      }
 
     private List<SchemaPropertyMetadata> createSchemaPropertyMetadata(AstahRepresentation astahRepresentation) {
-        var result = new ArrayList<SchemaPropertyMetadata>();
-        result.add(new MultiplicityMetadata(astahRepresentation));
-        return result;
+        return List.of(new MultiplicityMetadata(astahRepresentation));
     }
 
     public IPackage targetPackage() {
@@ -40,8 +38,8 @@ public class BuildInstruction {
         return typeResolver;
     }
 
-    List<SchemaPropertyMetadata> schemaPropertyMetadata() {
-        return Collections.emptyList();
+    public List<SchemaPropertyMetadata> schemaPropertyMetadata() {
+        return schemaPropertyMetadata;
     }
 
 }

@@ -1,11 +1,15 @@
 package hu.modeldriven.openapi;
 
+import com.change_vision.jude.api.inf.editor.ModelEditor;
+import com.change_vision.jude.api.inf.editor.SysmlModelEditor;
+import com.change_vision.jude.api.inf.project.ProjectAccessor;
 import hu.modeldriven.astah.core.AstahRepresentation;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IValueType;
 import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
+import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -26,7 +30,10 @@ public class AppTest {
 
         OpenAPIObject openAPIObject = new OpenAPIObject(result.getOpenAPI());
 
-        AstahRepresentation astahRepresentation = Mockito.mock(AstahRepresentation.class);
+        var projectAccessor = Mockito.mock(ProjectAccessor.class);
+        var modelEditor = Mockito.mock(SysmlModelEditor.class);
+
+        var astahRepresentation = Mockito.mock(AstahRepresentation.class);
 
         when(astahRepresentation.createBlock(any(), any())).thenReturn(Mockito.mock(IBlock.class));
         when(astahRepresentation.createValueAttribute(any(), any(), any())).thenReturn(Mockito.mock(IAttribute.class));

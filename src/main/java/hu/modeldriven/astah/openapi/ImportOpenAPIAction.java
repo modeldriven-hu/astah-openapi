@@ -32,9 +32,9 @@ public class ImportOpenAPIAction implements IPluginActionDelegate {
 			var openAPIObject = new OpenAPIObject(result.getOpenAPI());
 
 			try {
-				var representation = new AstahRepresentation();
-				var targetPackage = representation.findPackage("api");
-				openAPIObject.build(new BuildInstruction(targetPackage));
+				var astah = new AstahRepresentation();
+				var targetPackage = astah.findPackage("api");
+				openAPIObject.build(new BuildInstruction(targetPackage, astah));
 			} catch (ModelBuildingException e) {
 				JOptionPane.showMessageDialog(null, e.getMessage());
 			}

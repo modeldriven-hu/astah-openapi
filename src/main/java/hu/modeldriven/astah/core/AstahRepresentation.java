@@ -23,6 +23,11 @@ public class AstahRepresentation {
         }
     }
 
+    public AstahRepresentation(ProjectAccessor projectAccessor, SysmlModelEditor modelEditor){
+        this.projectAccessor = projectAccessor;
+        this.modelEditor = modelEditor;
+    }
+
     public void setMultiplicity(IAttribute attribute, int value) {
         try {
             attribute.setMultiplicity(new int[][]{{value}});
@@ -33,7 +38,7 @@ public class AstahRepresentation {
 
     public void setMultiplicity(IAttribute attribute, int min, int max) {
         try {
-            attribute.setMultiplicity(new int[][]{{min}, {max}});
+            attribute.setMultiplicity(new int[][]{{min, max}});
         } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);
         }
@@ -107,7 +112,6 @@ public class AstahRepresentation {
 
         return lastMatchingPackage;
     }
-
 
     public void beginTransaction() {
         projectAccessor.getTransactionManager().beginTransaction();
