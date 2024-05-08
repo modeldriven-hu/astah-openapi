@@ -7,7 +7,7 @@
         <plugin.install>true</plugin.install>
         <astah.version>1.1</astah.version>
         <astah.edition>sysml</astah.edition>
-        <astah.path>/usr/lib/astah_sysml</astah.path>
+        <astah.path>C:/Program Files/astah_sysml</astah.path>
     </properties>
     <modelVersion>4.0.0</modelVersion>
     <groupId>hu.modeldriven.astah</groupId>
@@ -115,11 +115,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>2.3.2</version>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>21</source>
+                    <target>21</target>
+                    <release>21</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -461,6 +462,12 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
             <version>2.0.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>
