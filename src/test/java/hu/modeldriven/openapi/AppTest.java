@@ -1,6 +1,6 @@
 package hu.modeldriven.openapi;
 
-import astah.AstahRepresentation;
+import hu.modeldriven.astah.core.AstahRepresentation;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IValueType;

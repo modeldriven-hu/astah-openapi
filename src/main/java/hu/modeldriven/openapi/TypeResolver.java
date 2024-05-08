@@ -1,17 +1,14 @@
 package hu.modeldriven.openapi;
 
-import astah.AstahRepresentation;
-import astah.AstahRuntimeException;
-import com.change_vision.jude.api.inf.editor.IDiagramEditorFactory;
+import hu.modeldriven.astah.core.AstahRepresentation;
+import hu.modeldriven.astah.core.AstahRuntimeException;
 import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IClass;
-import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueType;
 import io.swagger.v3.oas.models.media.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 

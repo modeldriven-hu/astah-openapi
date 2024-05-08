@@ -1,6 +1,6 @@
 package hu.modeldriven.openapi;
 
-import astah.AstahRuntimeException;
+import hu.modeldriven.astah.core.AstahRuntimeException;
 import com.change_vision.jude.api.inf.model.IBlock;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ObjectSchema;
@@ -38,9 +38,8 @@ public class ComponentSchemas {
     public void build(BuildInstruction instruction) throws ModelBuildingException {
 
         try {
+            // Start a transaction
             instruction.astah().beginTransaction();
-
-            // First we create the schema objects
 
             // order entries by resolvability
             var orderedSchemaObjects = orderByResolvability(schemaObjects);

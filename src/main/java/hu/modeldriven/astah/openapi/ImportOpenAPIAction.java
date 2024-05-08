@@ -2,7 +2,7 @@ package hu.modeldriven.astah.openapi;
 
 import javax.swing.*;
 
-import astah.AstahRepresentation;
+import hu.modeldriven.astah.core.AstahRepresentation;
 import com.change_vision.jude.api.inf.ui.IPluginActionDelegate;
 import com.change_vision.jude.api.inf.ui.IWindow;
 import hu.modeldriven.openapi.BuildInstruction;

@@ -1,4 +1,4 @@
-package astah;
+package hu.modeldriven.astah.core;
 
 import com.change_vision.jude.api.inf.AstahAPI;
 import com.change_vision.jude.api.inf.editor.SysmlModelEditor;

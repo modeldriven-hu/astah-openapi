@@ -1,6 +1,6 @@
 package hu.modeldriven.openapi.metadata;
 
-import astah.AstahRepresentation;
+import hu.modeldriven.astah.core.AstahRepresentation;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IMultiplicityRange;
 import hu.modeldriven.openapi.SchemaPropertyMetadata;
