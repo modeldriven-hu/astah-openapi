@@ -13,7 +13,7 @@ import io.swagger.v3.parser.core.models.SwaggerParseResult;
 
 import java.io.File;
 
-public class TemplateAction implements IPluginActionDelegate {
+public class ImportOpenAPIAction implements IPluginActionDelegate {
 
 	public Object run(IWindow window) throws UnExpectedException {
 		JOptionPane.showMessageDialog(null, "Starting creating of openapi elements");

@@ -20,7 +20,7 @@ public class BuildInstruction {
         this.astah = new AstahRepresentation();
         this.typeResolver = new TypeResolver(astah);
         this.schemaPropertyMetadata = createSchemaPropertyMetadata(astah);
-    }
+     }
 
     private List<SchemaPropertyMetadata> createSchemaPropertyMetadata(AstahRepresentation astahRepresentation) {
         List<SchemaPropertyMetadata> result = new ArrayList<>();

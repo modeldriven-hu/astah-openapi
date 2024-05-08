@@ -1,14 +1,18 @@
 package hu.modeldriven.openapi;
 
 import astah.AstahRepresentation;
+import astah.AstahRuntimeException;
 import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IClass;
+import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueType;
 import io.swagger.v3.oas.models.media.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 public class TypeResolver {
 
@@ -20,6 +24,27 @@ public class TypeResolver {
 
     public TypeResolver(AstahRepresentation astah) {
         this.astah = astah;
+        createTypesIfNotExists();
+    }
+
+    private void createTypesIfNotExists() {
+        try {
+            astah.beginTransaction();
+
+            IPackage typePackage = astah.findOrCreatePackage(OPEN_API_PATH);
+
+            Stream.of("DateTime", "String", "Boolean", "Integer", "Number")
+                    .forEach(name -> {
+                        if (findByTypeName(astah, name) == null) {
+                            astah.createValueType(typePackage, name);
+                        }
+                    });
+
+            astah.commitTransaction();
+        } catch (Exception e) {
+            astah.abortTransaction();
+            throw new AstahRuntimeException(e);
+        }
     }
 
     public IClass resolve(Schema<?> schema, Map<String, IBlock> modelElements) {

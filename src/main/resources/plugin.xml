@@ -13,7 +13,7 @@
             <action
                     label="%menu_label"
                     icon="icons/sample.gif"
-                    class="hu.modeldriven.astah.openapi.TemplateAction"
+                    class="hu.modeldriven.astah.openapi.ImportOpenAPIAction"
                     tooltip="%menu_tooltip"
                     menubarPath="tool/openapi/"
                     id="openapi">

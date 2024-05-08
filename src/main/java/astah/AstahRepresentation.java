@@ -120,4 +120,54 @@ public class AstahRepresentation {
     public void abortTransaction(){
         projectAccessor.getTransactionManager().abortTransaction();
     }
+
+    public IPackage findOrCreatePackage(String path) {
+        try {
+            IPackage rootPackage = projectAccessor.getProject();
+
+            // Split the package path into individual elements
+            String[] packageElements = path.split("\\.");
+
+            // Iterate through each element in the package path
+            IPackage currentPackage = rootPackage;
+
+            for (String packageElement : packageElements) {
+                // Check if the package exists, if not, create it
+                IPackage childPackage = findOrCreatePackage(currentPackage, packageElement);
+                currentPackage = childPackage;
+            }
+
+            return currentPackage;
+
+        } catch (ProjectNotFoundException e){
+            throw new AstahRuntimeException(e);
+        }
+    }
+
+    private IPackage findOrCreatePackage(IPackage parentPackage, String packageName) {
+
+        // Check if the child package exists
+        for (INamedElement element : parentPackage.getOwnedElements()) {
+            if (element instanceof IPackage) {
+                IPackage childPackage = (IPackage) element;
+                if (childPackage.getName().equals(packageName)) {
+                    return childPackage;
+                }
+            }
+        }
+
+        try {
+            return modelEditor.createPackage(parentPackage, packageName);
+        } catch (InvalidEditingException e) {
+            throw new AstahRuntimeException(e);
+        }
+    }
+
+    public void createValueType(IPackage rootPackage, String name) {
+        try {
+            modelEditor.createValueType(rootPackage, name);
+        } catch (InvalidEditingException e) {
+            throw new AstahRuntimeException(e);
+        }
+    }
 }
