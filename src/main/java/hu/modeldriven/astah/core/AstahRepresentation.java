@@ -8,6 +8,7 @@ import com.change_vision.jude.api.inf.model.*;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class AstahRepresentation {
 
@@ -166,10 +167,24 @@ public class AstahRepresentation {
         }
     }
 
-    public void createValueType(IPackage rootPackage, String name) {
+    public void createValueType(IPackage parentPackage, String name) {
         try {
-            modelEditor.createValueType(rootPackage, name);
+            modelEditor.createValueType(parentPackage, name);
         } catch (InvalidEditingException e) {
+            throw new AstahRuntimeException(e);
+        }
+    }
+
+    public IEnumerationValueType createEnumeration(IPackage parentPackage, String name, List<String> values) {
+        try{
+            var enumeration = modelEditor.createEnumeration(parentPackage, name);
+
+            for (var value : values){
+                enumeration.createEnumerationLiteral(value);
+            }
+
+            return enumeration;
+        } catch (InvalidEditingException e){
             throw new AstahRuntimeException(e);
         }
     }

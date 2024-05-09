@@ -4,6 +4,7 @@ import com.change_vision.jude.api.inf.model.IClass;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class ModelElementsStore {
 
@@ -20,4 +21,13 @@ public class ModelElementsStore {
     public IClass get(String name) {
         return this.modelElements.get(name);
     }
+
+    public boolean containsKey(String key) {
+        return this.modelElements.containsKey(key);
+    }
+
+    public IClass computeIfAbsent(String key,Function<? super String, ? extends IClass> mappingFunction) {
+        return this.modelElements.computeIfAbsent(key, mappingFunction);
+    }
+
 }

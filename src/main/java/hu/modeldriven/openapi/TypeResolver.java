@@ -1,10 +1,13 @@
 package hu.modeldriven.openapi;
 
+import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IClass;
+import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueType;
 import hu.modeldriven.astah.core.AstahRepresentation;
 import hu.modeldriven.astah.core.AstahRuntimeException;
 import io.swagger.v3.oas.models.media.*;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +26,8 @@ public class TypeResolver {
         createTypesIfNotExists();
     }
 
+    // FIXME remove the constructor and execute the code on the first getOrCreate call.
+    // to get rid of transaction handling
     private void createTypesIfNotExists() {
         try {
             astah.beginTransaction();
@@ -43,12 +48,11 @@ public class TypeResolver {
         }
     }
 
-    public IClass resolve(Schema<?> schema, ModelElementsStore store) {
+    public IClass getOrCreate(String fieldName, IBlock owner, Schema<?> schema, ModelElementsStore store) {
 
         if (isArray(schema)) {
             if (hasArrayReference(schema)) {
-                var name = getReferenceTypeNameOfArray(schema);
-                return store.get(name);
+                return store.get(getReferenceTypeNameOfArray(schema));
             } else if (hasArrayObject(schema)) {
                 // FIXME not implemented
                 logger.info("Arrays containing objects not implemented");
@@ -63,13 +67,12 @@ public class TypeResolver {
         }
 
         if (isReference(schema)) {
-            String name = getReferenceTypeName(schema);
-            return store.get(name);
+            return store.get(getReferenceTypeName(schema));
         }
 
         if (isEnum(schema)) {
-            String name = getReferenceTypeName(schema);
-            return store.get(name + "Enum");
+            return store.computeIfAbsent(StringUtils.capitalize(fieldName + "Enum"), name ->
+                    astah.createEnumeration((IPackage) owner.getOwner(), name, ((StringSchema) schema).getEnum()));
         }
 
         return resolveCoreType(schema);

@@ -2,6 +2,7 @@ package hu.modeldriven.openapi;
 
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IBlock;
+import com.change_vision.jude.api.inf.model.IPackage;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
@@ -37,7 +38,7 @@ public class SchemaProperty {
 
     public void build(String name, Schema<?> blockSchema, IBlock owner, BuildInstruction instruction, ModelElementsStore store) {
         var astah = instruction.astah();
-        var type = instruction.typeResolver().resolve(schema, store);
+        var type = instruction.typeResolver().getOrCreate(name, owner, schema, store);
 
         if (type == null && !(schema instanceof ObjectSchema || schema instanceof ArraySchema)) {
             logger.info("***** [SchemaProperty.class] Type not supported: {}", schema);
