@@ -1,11 +1,9 @@
 package hu.modeldriven.openapi;
 
-import hu.modeldriven.astah.core.AstahRepresentation;
 import com.change_vision.jude.api.inf.model.IPackage;
+import hu.modeldriven.astah.core.AstahRepresentation;
 import hu.modeldriven.openapi.metadata.MultiplicityMetadata;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class BuildInstruction {
@@ -20,7 +18,7 @@ public class BuildInstruction {
         this.astah = astah;
         this.typeResolver = new TypeResolver(astah);
         this.schemaPropertyMetadata = createSchemaPropertyMetadata(astah);
-     }
+    }
 
     private List<SchemaPropertyMetadata> createSchemaPropertyMetadata(AstahRepresentation astahRepresentation) {
         return List.of(new MultiplicityMetadata(astahRepresentation));

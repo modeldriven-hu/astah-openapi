@@ -1,15 +1,13 @@
 package hu.modeldriven.openapi;
 
-import hu.modeldriven.astah.core.AstahRepresentation;
-import hu.modeldriven.astah.core.AstahRuntimeException;
-import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IValueType;
+import hu.modeldriven.astah.core.AstahRepresentation;
+import hu.modeldriven.astah.core.AstahRuntimeException;
 import io.swagger.v3.oas.models.media.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.stream.Stream;
 
 public class TypeResolver {
@@ -45,12 +43,12 @@ public class TypeResolver {
         }
     }
 
-    public IClass resolve(Schema<?> schema, Map<String, IBlock> modelElements) {
+    public IClass resolve(Schema<?> schema, ModelElementsStore store) {
 
         if (isArray(schema)) {
             if (hasArrayReference(schema)) {
                 var name = getReferenceTypeNameOfArray(schema);
-                return modelElements.get(name);
+                return store.get(name);
             } else if (hasArrayObject(schema)) {
                 // FIXME not implemented
                 logger.info("Arrays containing objects not implemented");
@@ -66,7 +64,12 @@ public class TypeResolver {
 
         if (isReference(schema)) {
             String name = getReferenceTypeName(schema);
-            return modelElements.get(name);
+            return store.get(name);
+        }
+
+        if (isEnum(schema)) {
+            String name = getReferenceTypeName(schema);
+            return store.get(name + "Enum");
         }
 
         return resolveCoreType(schema);
@@ -74,7 +77,7 @@ public class TypeResolver {
 
     private IClass resolveCoreType(Schema<?> schema) {
 
-        return switch (schema){
+        return switch (schema) {
             case DateTimeSchema d -> findByTypeName(astah, "DateTime");
             case StringSchema s -> findByTypeName(astah, "String");
             case BooleanSchema b -> findByTypeName(astah, "Boolean");
@@ -87,6 +90,10 @@ public class TypeResolver {
 
     private IValueType findByTypeName(AstahRepresentation astah, String typeName) {
         return astah.findElementByPath(OPEN_API_PATH, typeName, IValueType.class);
+    }
+
+    private boolean isEnum(Schema<?> schema) {
+        return schema instanceof StringSchema && ((StringSchema) schema).getEnum() != null;
     }
 
     private boolean isArray(Schema<?> schema) {

@@ -23,7 +23,7 @@ public class AstahRepresentation {
         }
     }
 
-    public AstahRepresentation(ProjectAccessor projectAccessor, SysmlModelEditor modelEditor){
+    public AstahRepresentation(ProjectAccessor projectAccessor, SysmlModelEditor modelEditor) {
         this.projectAccessor = projectAccessor;
         this.modelEditor = modelEditor;
     }
@@ -117,11 +117,11 @@ public class AstahRepresentation {
         projectAccessor.getTransactionManager().beginTransaction();
     }
 
-    public void commitTransaction(){
+    public void commitTransaction() {
         projectAccessor.getTransactionManager().endTransaction();
     }
 
-    public void abortTransaction(){
+    public void abortTransaction() {
         projectAccessor.getTransactionManager().abortTransaction();
     }
 
@@ -143,7 +143,7 @@ public class AstahRepresentation {
 
             return currentPackage;
 
-        } catch (ProjectNotFoundException e){
+        } catch (ProjectNotFoundException e) {
             throw new AstahRuntimeException(e);
         }
     }
@@ -152,8 +152,7 @@ public class AstahRepresentation {
 
         // Check if the child package exists
         for (INamedElement element : parentPackage.getOwnedElements()) {
-            if (element instanceof IPackage) {
-                IPackage childPackage = (IPackage) element;
+            if (element instanceof IPackage childPackage) {
                 if (childPackage.getName().equals(packageName)) {
                     return childPackage;
                 }

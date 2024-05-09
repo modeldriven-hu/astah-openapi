@@ -8,7 +8,6 @@ import io.swagger.v3.oas.models.media.Schema;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
 import java.util.Set;
 
 public class SchemaProperty {
@@ -36,9 +35,9 @@ public class SchemaProperty {
         return true;
     }
 
-    public void build(String name, Schema<?> blockSchema, IBlock owner, BuildInstruction instruction, Map<String, IBlock> modelElements) {
+    public void build(String name, Schema<?> blockSchema, IBlock owner, BuildInstruction instruction, ModelElementsStore store) {
         var astah = instruction.astah();
-        var type = instruction.typeResolver().resolve(schema, modelElements);
+        var type = instruction.typeResolver().resolve(schema, store);
 
         if (type == null && !(schema instanceof ObjectSchema || schema instanceof ArraySchema)) {
             logger.info("***** [SchemaProperty.class] Type not supported: {}", schema);

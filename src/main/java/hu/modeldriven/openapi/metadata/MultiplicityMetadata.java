@@ -1,8 +1,8 @@
 package hu.modeldriven.openapi.metadata;
 
-import hu.modeldriven.astah.core.AstahRepresentation;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IMultiplicityRange;
+import hu.modeldriven.astah.core.AstahRepresentation;
 import hu.modeldriven.openapi.SchemaPropertyMetadata;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.Schema;

@@ -10,7 +10,7 @@ public class SchemaArray {
         this.schema = schema;
     }
 
-    public void build(){
+    public void build() {
         // TODO add implementation
     }
 

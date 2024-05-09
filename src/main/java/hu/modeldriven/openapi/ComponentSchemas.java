@@ -1,7 +1,6 @@
 package hu.modeldriven.openapi;
 
 import hu.modeldriven.astah.core.AstahRuntimeException;
-import com.change_vision.jude.api.inf.model.IBlock;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
@@ -35,7 +34,7 @@ public class ComponentSchemas {
 
     }
 
-    public void build(BuildInstruction instruction) throws ModelBuildingException {
+    public void build(BuildInstruction instruction) {
 
         try {
             // Start a transaction
@@ -43,7 +42,7 @@ public class ComponentSchemas {
 
             // order entries by resolvability
             var orderedSchemaObjects = orderByResolvability(schemaObjects);
-            var modelElements = new LinkedHashMap<String, IBlock>();
+            var store = new ModelElementsStore();
 
             // create model representation
             for (var entry : orderedSchemaObjects.entrySet()) {
@@ -53,12 +52,12 @@ public class ComponentSchemas {
                 // Create frame as a SysML block
 
                 var block = instruction.astah().createBlock(instruction.targetPackage(), entry.getKey());
-                modelElements.put(entry.getKey(), block);
+                store.put(entry.getKey(), block);
 
                 // Create inner parts of the block, like fields
 
                 var schemaObject = entry.getValue();
-                schemaObject.build(block, instruction, modelElements);
+                schemaObject.build(block, instruction, store);
             }
 
             // Then we create the schema arrays that are referencing the previously created
@@ -70,7 +69,7 @@ public class ComponentSchemas {
             }
 
             instruction.astah().commitTransaction();
-        } catch (Exception e){
+        } catch (Exception e) {
             instruction.astah().abortTransaction();
             throw new AstahRuntimeException(e);
         }
@@ -84,7 +83,6 @@ public class ComponentSchemas {
         var infiniteLoopCounter = 0;
 
         do {
-
             for (var entry : schemaObjects.entrySet()) {
 
                 var schemaName = entry.getKey();
