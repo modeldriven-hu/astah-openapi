@@ -13,8 +13,7 @@ import java.io.File;
 
 public class ImportOpenAPIAction implements IPluginActionDelegate {
 
-    public Object run(IWindow window) throws UnExpectedException {
-        JOptionPane.showMessageDialog(null, "Starting creating of openapi elements");
+    public Object run(IWindow window) {
 
         var fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
@@ -23,9 +22,6 @@ public class ImportOpenAPIAction implements IPluginActionDelegate {
 
         if (fileSelectionResult == JFileChooser.APPROVE_OPTION) {
             var selectedFile = fileChooser.getSelectedFile();
-
-            JOptionPane.showMessageDialog(null, "Reading file: " + selectedFile.getAbsolutePath());
-
             var parser = new OpenAPIParser();
             var result = parser.readLocation(selectedFile.getAbsolutePath(), null, null);
             var openAPIObject = new OpenAPIObject(result.getOpenAPI());

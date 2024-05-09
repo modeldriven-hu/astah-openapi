@@ -24,11 +24,6 @@ public class AstahRepresentation {
         }
     }
 
-    public AstahRepresentation(ProjectAccessor projectAccessor, SysmlModelEditor modelEditor) {
-        this.projectAccessor = projectAccessor;
-        this.modelEditor = modelEditor;
-    }
-
     public void setMultiplicity(IAttribute attribute, int value) {
         try {
             attribute.setMultiplicity(new int[][]{{value}});
@@ -176,15 +171,15 @@ public class AstahRepresentation {
     }
 
     public IEnumerationValueType createEnumeration(IPackage parentPackage, String name, List<String> values) {
-        try{
+        try {
             var enumeration = modelEditor.createEnumeration(parentPackage, name);
 
-            for (var value : values){
+            for (var value : values) {
                 enumeration.createEnumerationLiteral(value);
             }
 
             return enumeration;
-        } catch (InvalidEditingException e){
+        } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);
         }
     }

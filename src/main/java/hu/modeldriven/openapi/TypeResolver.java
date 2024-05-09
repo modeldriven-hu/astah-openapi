@@ -71,7 +71,10 @@ public class TypeResolver {
         }
 
         if (isEnum(schema)) {
-            return store.computeIfAbsent(StringUtils.capitalize(fieldName + "Enum"), name ->
+
+            var enumName = StringUtils.capitalize(owner.getName()) + StringUtils.capitalize(fieldName) + "Enum";
+
+            return store.computeIfAbsent(enumName, name ->
                     astah.createEnumeration((IPackage) owner.getOwner(), name, ((StringSchema) schema).getEnum()));
         }
 

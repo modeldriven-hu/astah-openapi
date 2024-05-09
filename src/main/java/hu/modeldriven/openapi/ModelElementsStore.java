@@ -22,11 +22,7 @@ public class ModelElementsStore {
         return this.modelElements.get(name);
     }
 
-    public boolean containsKey(String key) {
-        return this.modelElements.containsKey(key);
-    }
-
-    public IClass computeIfAbsent(String key,Function<? super String, ? extends IClass> mappingFunction) {
+    public IClass computeIfAbsent(String key, Function<? super String, ? extends IClass> mappingFunction) {
         return this.modelElements.computeIfAbsent(key, mappingFunction);
     }
 
