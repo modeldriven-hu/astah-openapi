@@ -34,15 +34,14 @@ public class ComponentSchemas {
 
     }
 
-    public void build(BuildInstruction instruction) {
+    public void build(BuildContext context) {
 
         try {
             // Start a transaction
-            instruction.astah().beginTransaction();
+            context.astah().beginTransaction();
 
             // order entries by resolvability
             var orderedSchemaObjects = orderByResolvability(schemaObjects);
-            var store = new ModelElementsStore();
 
             // create model representation
             for (var entry : orderedSchemaObjects.entrySet()) {
@@ -51,13 +50,13 @@ public class ComponentSchemas {
 
                 // Create frame as a SysML block
 
-                var block = instruction.astah().createBlock(instruction.targetPackage(), entry.getKey());
-                store.put(entry.getKey(), block);
+                var block = context.astah().createBlock(context.targetPackage(), entry.getKey());
+                context.store().put(entry.getKey(), block);
 
                 // Create inner parts of the block, like fields
 
                 var schemaObject = entry.getValue();
-                schemaObject.build(block, instruction, store);
+                schemaObject.build(block, context);
             }
 
             // Then we create the schema arrays that are referencing the previously created
@@ -68,9 +67,9 @@ public class ComponentSchemas {
                 logger.info("Creation of schema arrays is not yet implemented");
             }
 
-            instruction.astah().commitTransaction();
+            context.astah().commitTransaction();
         } catch (Exception e) {
-            instruction.astah().abortTransaction();
+            context.astah().abortTransaction();
             throw new AstahRuntimeException(e);
         }
 

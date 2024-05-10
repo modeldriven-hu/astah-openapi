@@ -3,7 +3,7 @@ package hu.modeldriven.astah.openapi;
 import com.change_vision.jude.api.inf.ui.IPluginActionDelegate;
 import com.change_vision.jude.api.inf.ui.IWindow;
 import hu.modeldriven.astah.core.AstahRepresentation;
-import hu.modeldriven.openapi.BuildInstruction;
+import hu.modeldriven.openapi.BuildContext;
 import hu.modeldriven.openapi.ModelBuildingException;
 import hu.modeldriven.openapi.OpenAPIObject;
 import io.swagger.parser.OpenAPIParser;
@@ -29,7 +29,7 @@ public class ImportOpenAPIAction implements IPluginActionDelegate {
             try {
                 var astah = new AstahRepresentation();
                 var targetPackage = astah.findPackage("api");
-                openAPIObject.build(new BuildInstruction(targetPackage, astah));
+                openAPIObject.build(new BuildContext(targetPackage, astah));
             } catch (ModelBuildingException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
             }

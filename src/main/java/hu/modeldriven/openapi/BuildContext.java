@@ -6,18 +6,20 @@ import hu.modeldriven.openapi.metadata.MultiplicityMetadata;
 
 import java.util.List;
 
-public class BuildInstruction {
+public class BuildContext {
 
     private final IPackage targetPackage;
     private final AstahRepresentation astah;
     private final TypeResolver typeResolver;
     private final List<SchemaPropertyMetadata> schemaPropertyMetadata;
+    private final ModelElementsStore store;
 
-    public BuildInstruction(IPackage targetPackage, AstahRepresentation astah) {
+    public BuildContext(IPackage targetPackage, AstahRepresentation astah) {
         this.targetPackage = targetPackage;
         this.astah = astah;
         this.typeResolver = new TypeResolver(astah);
         this.schemaPropertyMetadata = createSchemaPropertyMetadata(astah);
+        this.store = new ModelElementsStore();
     }
 
     private List<SchemaPropertyMetadata> createSchemaPropertyMetadata(AstahRepresentation astahRepresentation) {
@@ -39,5 +41,7 @@ public class BuildInstruction {
     public List<SchemaPropertyMetadata> schemaPropertyMetadata() {
         return schemaPropertyMetadata;
     }
+
+    public ModelElementsStore store(){ return store; }
 
 }

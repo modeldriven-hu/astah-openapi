@@ -35,9 +35,9 @@ public class SchemaProperty {
         return true;
     }
 
-    public void build(String name, Schema<?> blockSchema, IBlock owner, BuildInstruction instruction, ModelElementsStore store) {
-        var astah = instruction.astah();
-        var type = instruction.typeResolver().getOrCreate(name, owner, schema, store);
+    public void build(String name, Schema<?> blockSchema, IBlock owner, BuildContext context) {
+        var astah = context.astah();
+        var type = context.typeResolver().getOrCreate(name, owner, schema, context.store());
 
         if (type == null && !(schema instanceof ObjectSchema || schema instanceof ArraySchema)) {
             logger.info("***** [SchemaProperty.class] Type not supported: {}", schema);
@@ -53,7 +53,7 @@ public class SchemaProperty {
             attribute = astah.createValueAttribute(owner, name, type);
         }
 
-        instruction.schemaPropertyMetadata().forEach(m -> m.applyTo(name, schema, blockSchema, attribute));
+        context.schemaPropertyMetadata().forEach(m -> m.applyTo(name, schema, blockSchema, attribute));
     }
 
 }

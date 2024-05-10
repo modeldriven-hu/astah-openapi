@@ -1,8 +1,5 @@
 package hu.modeldriven.openapi;
 
-import com.change_vision.jude.api.inf.editor.ModelEditor;
-import com.change_vision.jude.api.inf.editor.SysmlModelEditor;
-import com.change_vision.jude.api.inf.project.ProjectAccessor;
 import hu.modeldriven.astah.core.AstahRepresentation;
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IBlock;
@@ -11,13 +8,11 @@ import io.swagger.parser.OpenAPIParser;
 import io.swagger.v3.parser.core.models.SwaggerParseResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -45,7 +40,7 @@ public class AppTest {
 
         TypeResolver resolver = new TypeResolver(astahRepresentation);
 
-        BuildInstruction instruction = Mockito.mock(BuildInstruction.class);
+        BuildContext instruction = Mockito.mock(BuildContext.class);
         when(instruction.astah()).thenReturn(astahRepresentation);
         when(instruction.typeResolver()).thenReturn(resolver);
 

@@ -10,7 +10,7 @@ public class OpenAPIObject {
         this.components = new ComponentsObject(openAPI.getComponents());
     }
 
-    public void build(BuildInstruction instruction) throws ModelBuildingException {
+    public void build(BuildContext instruction) throws ModelBuildingException {
         this.components.build(instruction);
     }
 

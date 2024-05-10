@@ -37,7 +37,7 @@ public class SchemaObject {
         return true;
     }
 
-    public void build(IBlock owner, BuildInstruction instruction, ModelElementsStore store) {
+    public void build(IBlock owner, BuildContext context) {
         // it depends on the type of the property of what kind of connection has to be built
 
         for (var entry : schemaProperties.entrySet()) {
@@ -45,7 +45,7 @@ public class SchemaObject {
             logger.info("\t[SchemaObject] Building property: {}", entry.getKey());
 
             SchemaProperty schemaProperty = entry.getValue();
-            schemaProperty.build(entry.getKey(), schema, owner, instruction, store);
+            schemaProperty.build(entry.getKey(), schema, owner, context);
 
             logger.info("\t[SchemaObject] Building Completed");
         }

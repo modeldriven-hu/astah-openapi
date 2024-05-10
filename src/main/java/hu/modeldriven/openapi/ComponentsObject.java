@@ -10,8 +10,8 @@ public class ComponentsObject {
         this.componentSchemas = new ComponentSchemas(components.getSchemas());
     }
 
-    void build(BuildInstruction instruction) throws ModelBuildingException {
-        this.componentSchemas.build(instruction);
+    void build(BuildContext context) throws ModelBuildingException {
+        this.componentSchemas.build(context);
     }
 
 }
