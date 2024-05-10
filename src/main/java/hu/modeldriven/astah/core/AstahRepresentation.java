@@ -183,4 +183,28 @@ public class AstahRepresentation {
             throw new AstahRuntimeException(e);
         }
     }
+
+    public void createOperation(IClass parentClass, String name, IClass parameter, IClass returnType) {
+        try {
+            var operation = modelEditor.createOperation(parentClass, name, returnType);
+            // FIXME create parameters
+        } catch (InvalidEditingException e) {
+            throw new AstahRuntimeException(e);
+        }
+    }
+
+    public IInterfaceBlock findOrCreateInterfaceBlock(IPackage parentPackage, String name) {
+        try {
+
+            for (var element : parentPackage.getOwnedElements()) {
+                if (name.equals(element.getName()) && element instanceof IInterfaceBlock) {
+                    return (IInterfaceBlock) element;
+                }
+            }
+
+            return modelEditor.createInterfaceBlock(parentPackage, name);
+        } catch (InvalidEditingException e) {
+            throw new AstahRuntimeException(e);
+        }
+    }
 }

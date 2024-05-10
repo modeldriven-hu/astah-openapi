@@ -37,9 +37,6 @@ public class ComponentSchemas {
     public void build(BuildContext context) {
 
         try {
-            // Start a transaction
-            context.astah().beginTransaction();
-
             // order entries by resolvability
             var orderedSchemaObjects = orderByResolvability(schemaObjects);
 
@@ -67,12 +64,9 @@ public class ComponentSchemas {
                 logger.info("Creation of schema arrays is not yet implemented");
             }
 
-            context.astah().commitTransaction();
-        } catch (Exception e) {
-            context.astah().abortTransaction();
+        } catch (ModelBuildingException e) {
             throw new AstahRuntimeException(e);
         }
-
     }
 
     private Map<String, SchemaObject> orderByResolvability(Map<String, SchemaObject> schemaObjects) throws ModelBuildingException {
