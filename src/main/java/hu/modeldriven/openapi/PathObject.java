@@ -44,7 +44,7 @@ public class PathObject {
         var request = createRequest(action, operation, context);
         var response = createResponse(action, operation, context);
 
-        //context.astah().createOperation(interfaceBlock, operation.getOperationId(), request, response);
+        context.astah().createOperation(interfaceBlock, operation.getOperationId(), request, response);
     }
 
     private IClass createRequest(HttpAction action, Operation operation, BuildContext context) {
@@ -62,7 +62,7 @@ public class PathObject {
     }
 
     private IInterfaceBlock findOrCreateInterfaceBlock(String path, List<String> tags, BuildContext context) {
-        return context.astah().findOrCreateInterfaceBlock(context.targetPackage(), path);
+        return context.astah().findOrCreateInterfaceBlock(context.targetPackage(), tags.get(0)+"Service");
     }
 
 }
