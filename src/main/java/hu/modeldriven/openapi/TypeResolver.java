@@ -5,7 +5,6 @@ import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueType;
 import hu.modeldriven.astah.core.AstahRepresentation;
-import hu.modeldriven.astah.core.AstahRuntimeException;
 import io.swagger.v3.oas.models.media.*;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,29 +24,17 @@ public class TypeResolver {
     public TypeResolver(AstahRepresentation astah, ModelElementsStore store) {
         this.astah = astah;
         this.store = store;
-        createTypesIfNotExists();
     }
 
-    // FIXME remove the constructor and execute the code on the first getOrCreate call.
-    // to get rid of transaction handling
-    private void createTypesIfNotExists() {
-        try {
-            astah.beginTransaction();
+    public void createTypesIfNotExists() {
+        var typePackage = astah.findOrCreatePackage(OPEN_API_PATH);
 
-            var typePackage = astah.findOrCreatePackage(OPEN_API_PATH);
-
-            Stream.of("DateTime", "String", "Boolean", "Integer", "Number")
-                    .forEach(name -> {
-                        if (findByTypeName(astah, name) == null) {
-                            astah.createValueType(typePackage, name);
-                        }
-                    });
-
-            astah.commitTransaction();
-        } catch (Exception e) {
-            astah.abortTransaction();
-            throw new AstahRuntimeException(e);
-        }
+        Stream.of("DateTime", "String", "Boolean", "Integer", "Number")
+                .forEach(name -> {
+                    if (findByTypeName(astah, name) == null) {
+                        astah.createValueType(typePackage, name);
+                    }
+                });
     }
 
     public IClass getOrCreate(IBlock owner, String fieldName, Schema<?> schema) {

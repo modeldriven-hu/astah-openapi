@@ -17,6 +17,8 @@ public class OpenAPIObject {
         try {
             context.astah().beginTransaction();
 
+            context.typeResolver().createTypesIfNotExists();
+
             this.components.build(context);
             this.paths.build(context);
 
