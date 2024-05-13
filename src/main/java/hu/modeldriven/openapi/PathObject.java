@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
 
 public class PathObject {
 
@@ -26,25 +27,18 @@ public class PathObject {
 
     public void build(String path, BuildContext context) {
 
-        if (item.getGet() != null) {
-            createOperation(path, item.getGet(), context);
-        }
+        Function<Operation, Void> invoker = (operation) -> {
+            if (operation != null) {
+                createOperation(path, operation, context);
+            }
+            return null; // Functional methods typically return a value, null here indicates success
+        };
 
-        if (item.getPost() != null) {
-            createOperation(path, item.getPost(), context);
-        }
-
-        if (item.getPut() != null) {
-            createOperation(path, item.getPut(), context);
-        }
-
-        if (item.getDelete() != null) {
-            createOperation(path, item.getDelete(), context);
-        }
-
-        if (item.getPatch() != null) {
-            createOperation(path, item.getPatch(), context);
-        }
+        invoker.apply(item.getGet());
+        invoker.apply(item.getPost());
+        invoker.apply(item.getPut());
+        invoker.apply(item.getDelete());
+        invoker.apply(item.getPatch());
     }
 
     private void createOperation(String path, Operation operation, BuildContext context) {
