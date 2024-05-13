@@ -47,7 +47,7 @@ public class PathObject {
         var request = createRequest(operation, context);
         var response = createResponse(operation, context);
 
-        context.astah().createOperation(interfaceBlock, operation.getOperationId(), request, response);
+        context.astah().createOperation(interfaceBlock, operation.getOperationId(), request, response, operation.getDescription());
     }
 
     private IClass createRequest(Operation operation, BuildContext context) {
@@ -68,7 +68,7 @@ public class PathObject {
     private void createParameter(IBlock owner, Parameter parameter, BuildContext context) {
         var name = parameter.getName();
         var type = context.typeResolver().getOrCreate(owner, name, parameter.getSchema());
-        var attribute = context.astah().createValueAttribute(owner, name, type);
+        var attribute = context.astah().createValueAttribute(owner, name, type, parameter.getDescription());
 
         context.astah().setMultiplicity(attribute, !parameter.getRequired() ? 0 : 1, 1);
 

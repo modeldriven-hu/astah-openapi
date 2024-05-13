@@ -66,6 +66,17 @@ public class AstahRepresentation {
         }
     }
 
+    public IAttribute createValueAttribute(IClass owner,String name, IClass type, String definition) {
+        try {
+            var attribute = modelEditor.createValueAttribute(owner, name, type);
+            attribute.setDefinition(definition);
+            return attribute;
+        } catch (InvalidEditingException e) {
+            throw new AstahRuntimeException(e);
+        }
+    }
+
+
     public <T extends INamedElement> T findElementByPath(String path, String name, Class<T> typeClass) {
 
         IPackage rootPackage = this.findPackage(path);
@@ -201,9 +212,10 @@ public class AstahRepresentation {
         }
     }
 
-    public void createOperation(IClass parentClass, String name, IClass parameter, IClass returnType) {
+    public void createOperation(IClass parentClass, String name, IClass parameter, IClass returnType, String definition) {
         try {
             var operation = modelEditor.createOperation(parentClass, name, returnType);
+            operation.setDefinition(definition);
             modelEditor.createParameter(operation, "request", parameter);
         } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);
