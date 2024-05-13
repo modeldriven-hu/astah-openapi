@@ -3,12 +3,14 @@ package hu.modeldriven.astah.core;
 import com.change_vision.jude.api.inf.AstahAPI;
 import com.change_vision.jude.api.inf.editor.SysmlModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
+import com.change_vision.jude.api.inf.exception.InvalidUsingException;
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
 import com.change_vision.jude.api.inf.model.*;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class AstahRepresentation {
 
@@ -75,6 +77,21 @@ public class AstahRepresentation {
         }
 
         return null;
+    }
+
+    public IPackage selectedPackageInTree(){
+        try {
+            var entities = projectAccessor.getViewManager().getProjectViewManager().getSelectedEntities();
+
+            return Stream.of(entities)
+                    .filter(e -> e instanceof IPackage)
+                    .map(IPackage.class::cast)
+                    .findFirst()
+                    .orElse(null);
+
+        } catch (InvalidUsingException e) {
+            throw new AstahRuntimeException(e);
+        }
     }
 
     public IPackage findPackage(String path) {

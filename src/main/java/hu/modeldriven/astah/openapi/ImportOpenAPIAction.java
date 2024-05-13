@@ -15,6 +15,15 @@ public class ImportOpenAPIAction implements IPluginActionDelegate {
 
     public Object run(IWindow window) {
 
+        var astah = new AstahRepresentation();
+
+        var targetPackage = astah.selectedPackageInTree();
+
+        if (targetPackage == null){
+            JOptionPane.showMessageDialog(window.getParent(), "Please select a package");
+            return null;
+        }
+
         var fileChooser = new JFileChooser();
         fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 
@@ -27,8 +36,6 @@ public class ImportOpenAPIAction implements IPluginActionDelegate {
             var openAPIObject = new OpenAPIObject(result.getOpenAPI());
 
             try {
-                var astah = new AstahRepresentation();
-                var targetPackage = astah.findPackage("api");
                 openAPIObject.build(new BuildContext(targetPackage, astah));
             } catch (ModelBuildingException e) {
                 JOptionPane.showMessageDialog(null, e.getMessage());
