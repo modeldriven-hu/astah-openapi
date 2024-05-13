@@ -56,7 +56,7 @@ public class AstahRepresentation {
         }
     }
 
-    public IAttribute createValueAttribute(IClass owner, String name, IClass type) {
+    public IAttribute createValueAttribute(IClass owner,String name, IClass type) {
         try {
             return modelEditor.createValueAttribute(owner, name, type);
         } catch (InvalidEditingException e) {

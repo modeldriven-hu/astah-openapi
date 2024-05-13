@@ -37,7 +37,7 @@ public class SchemaProperty {
 
     public void build(String name, Schema<?> blockSchema, IBlock owner, BuildContext context) {
         var astah = context.astah();
-        var type = context.typeResolver().getOrCreate(name, owner, schema, context.store());
+        var type = context.typeResolver().getOrCreate(owner, name, schema);
 
         if (type == null && !(schema instanceof ObjectSchema || schema instanceof ArraySchema)) {
             logger.info("***** [SchemaProperty.class] Type not supported: {}", schema);

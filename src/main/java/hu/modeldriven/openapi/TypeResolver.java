@@ -20,9 +20,11 @@ public class TypeResolver {
     private static final String OPEN_API_PATH = "OpenAPI";
 
     private final AstahRepresentation astah;
+    private final ModelElementsStore store;
 
-    public TypeResolver(AstahRepresentation astah) {
+    public TypeResolver(AstahRepresentation astah, ModelElementsStore store) {
         this.astah = astah;
+        this.store = store;
         createTypesIfNotExists();
     }
 
@@ -48,7 +50,7 @@ public class TypeResolver {
         }
     }
 
-    public IClass getOrCreate(String fieldName, IBlock owner, Schema<?> schema, ModelElementsStore store) {
+    public IClass getOrCreate(IBlock owner, String fieldName, Schema<?> schema) {
 
         if (isArray(schema)) {
             if (hasArrayReference(schema)) {

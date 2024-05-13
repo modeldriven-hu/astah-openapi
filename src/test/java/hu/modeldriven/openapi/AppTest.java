@@ -20,13 +20,10 @@ public class AppTest {
 
     @Test
     public void testParse() throws Exception {
-        OpenAPIParser parser = new OpenAPIParser();
-
-        SwaggerParseResult result = parser.readLocation("https://petstore3.swagger.io/api/v3/openapi.json", null, null);
-
-        OpenAPIObject openAPIObject = new OpenAPIObject(result.getOpenAPI());
-
-        AstahRepresentation astahRepresentation = Mockito.mock(AstahRepresentation.class);
+        var parser = new OpenAPIParser();
+        var result = parser.readLocation("https://petstore3.swagger.io/api/v3/openapi.json", null, null);
+        var openAPIObject = new OpenAPIObject(result.getOpenAPI());
+        var astahRepresentation = Mockito.mock(AstahRepresentation.class);
 
         when(astahRepresentation.createBlock(any(), any())).thenReturn(Mockito.mock(IBlock.class));
         when(astahRepresentation.createValueAttribute(any(), any(), any())).thenReturn(Mockito.mock(IAttribute.class));
@@ -38,7 +35,8 @@ public class AppTest {
         when(astahRepresentation.findElementByPath(any(), eq("DateTime"), any())).thenReturn(Mockito.mock(IValueType.class));
         when(astahRepresentation.findElementByPath(any(), eq("Number"), any())).thenReturn(Mockito.mock(IValueType.class));
 
-        TypeResolver resolver = new TypeResolver(astahRepresentation);
+        var store = new ModelElementsStore();
+        var resolver = new TypeResolver(astahRepresentation, store);
 
         BuildContext instruction = Mockito.mock(BuildContext.class);
         when(instruction.astah()).thenReturn(astahRepresentation);

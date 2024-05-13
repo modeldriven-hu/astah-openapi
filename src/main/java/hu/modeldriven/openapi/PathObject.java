@@ -6,9 +6,13 @@ import com.change_vision.jude.api.inf.model.IInterfaceBlock;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.List;
 
 public class PathObject {
 
@@ -21,59 +25,44 @@ public class PathObject {
     }
 
     public void build(String path, BuildContext context) {
+
         if (item.getGet() != null) {
-            createOperation(path, HttpAction.GET, item.getGet(), context);
+            createOperation(path, item.getGet(), context);
         }
 
         if (item.getPost() != null) {
-            createOperation(path, HttpAction.POST, item.getPost(), context);
+            createOperation(path, item.getPost(), context);
         }
 
         if (item.getPut() != null) {
-            createOperation(path, HttpAction.PUT, item.getPut(), context);
+            createOperation(path, item.getPut(), context);
         }
 
         if (item.getDelete() != null) {
-            createOperation(path, HttpAction.DELETE, item.getDelete(), context);
+            createOperation(path, item.getDelete(), context);
         }
 
         if (item.getPatch() != null) {
-            createOperation(path, HttpAction.PATCH, item.getPatch(), context);
+            createOperation(path, item.getPatch(), context);
         }
     }
 
-    private void createOperation(String path, HttpAction action, Operation operation, BuildContext context) {
+    private void createOperation(String path, Operation operation, BuildContext context) {
         var interfaceBlock = findOrCreateInterfaceBlock(path, operation, context);
 
-        var request = createRequest(action, operation, context);
-        var response = createResponse(action, operation, context);
+        var request = createRequest(operation, context);
+        var response = createResponse(operation, context);
 
         context.astah().createOperation(interfaceBlock, operation.getOperationId(), request, response);
     }
 
-    private void createBody(IBlock owner, Content content, String connectionName, BuildContext context) {
-        var jsonBody = content.get("application/json");
-
-        // FIXME handle not only application/json but also application/xml as well
-
-        if (jsonBody != null) {
-            var bodyType = context.typeResolver().getOrCreate(
-                    connectionName,
-                    owner,
-                    jsonBody.getSchema(),
-                    context.store());
-
-            if (bodyType instanceof IBlock bodyTypeAsBlock) {
-                context.astah().createPartRelationship(owner, connectionName, bodyTypeAsBlock);
-            }
-        }
-    }
-
-    private IClass createRequest(HttpAction action, Operation operation, BuildContext context) {
+    private IClass createRequest(Operation operation, BuildContext context) {
         var name = StringUtils.capitalize(operation.getOperationId() + "Request");
         var request = context.astah().createBlock(context.targetPackage(), name);
 
-        // FIXME add parameters
+        for (var parameter : emptyIfNull(operation.getParameters())) {
+            createParameter(request, parameter, context);
+        }
 
         if (operation.getRequestBody() != null && operation.getRequestBody().getContent() != null) {
             createBody(request, operation.getRequestBody().getContent(), "body", context);
@@ -82,7 +71,17 @@ public class PathObject {
         return request;
     }
 
-    private IClass createResponse(HttpAction action, Operation operation, BuildContext context) {
+    private void createParameter(IBlock owner, Parameter parameter, BuildContext context) {
+        var name = parameter.getName();
+        var type = context.typeResolver().getOrCreate(owner, name, parameter.getSchema());
+        var attribute = context.astah().createValueAttribute(owner, name, type);
+
+        context.astah().setMultiplicity(attribute, !parameter.getRequired() ? 0 : 1, 1);
+
+        // FIXME create stereotype based on parameter.getIn()
+    }
+
+    private IClass createResponse(Operation operation, BuildContext context) {
         var name = StringUtils.capitalize(operation.getOperationId() + "Response");
         var response = context.astah().createBlock(context.targetPackage(), name);
 
@@ -95,6 +94,23 @@ public class PathObject {
         return response;
     }
 
+    private void createBody(IBlock owner, Content content, String connectionName, BuildContext context) {
+        var jsonBody = content.get("application/json");
+
+        // FIXME handle not only application/json but also application/xml as well
+
+        if (jsonBody != null) {
+            var bodyType = context.typeResolver().getOrCreate(
+                    owner,
+                    connectionName,
+                    jsonBody.getSchema());
+
+            if (bodyType instanceof IBlock bodyTypeAsBlock) {
+                context.astah().createPartRelationship(owner, connectionName, bodyTypeAsBlock);
+            }
+        }
+    }
+
     private IInterfaceBlock findOrCreateInterfaceBlock(String path, Operation operation, BuildContext context) {
         String name;
 
@@ -105,6 +121,13 @@ public class PathObject {
         }
 
         return context.astah().findOrCreateInterfaceBlock(context.targetPackage(), name);
+    }
+
+    private <T> List<T> emptyIfNull(List<T> list) {
+        if (list == null) {
+            return Collections.emptyList();
+        }
+        return list;
     }
 
 }

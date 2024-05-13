@@ -17,9 +17,9 @@ public class BuildContext {
     public BuildContext(IPackage targetPackage, AstahRepresentation astah) {
         this.targetPackage = targetPackage;
         this.astah = astah;
-        this.typeResolver = new TypeResolver(astah);
-        this.schemaPropertyMetadata = createSchemaPropertyMetadata(astah);
         this.store = new ModelElementsStore();
+        this.typeResolver = new TypeResolver(astah, store);
+        this.schemaPropertyMetadata = createSchemaPropertyMetadata(astah);
     }
 
     private List<SchemaPropertyMetadata> createSchemaPropertyMetadata(AstahRepresentation astahRepresentation) {
