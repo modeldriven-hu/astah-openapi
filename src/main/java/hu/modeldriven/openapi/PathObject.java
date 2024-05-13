@@ -1,14 +1,19 @@
 package hu.modeldriven.openapi;
 
+import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IInterfaceBlock;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class PathObject {
+
+    private static final Logger logger = LoggerFactory.getLogger(PathObject.class);
 
     private final PathItem item;
 
@@ -50,7 +55,30 @@ public class PathObject {
     private IClass createRequest(HttpAction action, Operation operation, BuildContext context) {
         var name = StringUtils.capitalize(operation.getOperationId() + "Request");
         var request = context.astah().createBlock(context.targetPackage(), name);
+
         // FIXME add parameters
+
+        if (operation.getRequestBody() != null && operation.getRequestBody().getContent() != null){
+
+            var jsonBody = operation.getRequestBody().getContent().get("application/json");
+
+            if (jsonBody != null){
+                var bodyType = context.typeResolver().getOrCreate(
+                        "body",
+                        request,
+                        jsonBody.getSchema(),
+                        context.store());
+
+                if (bodyType instanceof IBlock bodyTypeAsBlock){
+                    context.astah().createPartRelationship(request, "body", bodyTypeAsBlock);
+                } else {
+                    logger.info("Cannot set type for operation request: {} type is not " +
+                            " IBlock but {}", operation.getOperationId(), bodyType.getClass().getName());
+                }
+
+            }
+        }
+
         return request;
     }
 
@@ -62,7 +90,15 @@ public class PathObject {
     }
 
     private IInterfaceBlock findOrCreateInterfaceBlock(String path, List<String> tags, BuildContext context) {
-        return context.astah().findOrCreateInterfaceBlock(context.targetPackage(), tags.get(0)+"Service");
+        String name;
+
+        if (!tags.isEmpty()) {
+            name = StringUtils.capitalize(tags.get(0) + "Service");
+        } else {
+            name = path.startsWith("/") ? path.substring(1) : path;
+        }
+
+        return context.astah().findOrCreateInterfaceBlock(context.targetPackage(), name);
     }
 
 }

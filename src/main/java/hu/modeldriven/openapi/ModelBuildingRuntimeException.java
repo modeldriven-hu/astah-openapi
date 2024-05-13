@@ -6,8 +6,4 @@ public class ModelBuildingRuntimeException extends RuntimeException {
         super(message);
     }
 
-    public ModelBuildingRuntimeException(Exception e) {
-        super(e);
-    }
-
 }

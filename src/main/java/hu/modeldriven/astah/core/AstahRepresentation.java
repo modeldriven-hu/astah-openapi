@@ -187,7 +187,7 @@ public class AstahRepresentation {
     public void createOperation(IClass parentClass, String name, IClass parameter, IClass returnType) {
         try {
             var operation = modelEditor.createOperation(parentClass, name, returnType);
-            // FIXME create parameters
+            modelEditor.createParameter(operation, "request", parameter);
         } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);
         }
