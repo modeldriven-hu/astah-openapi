@@ -42,6 +42,8 @@ public class BuildContext {
         return schemaPropertyMetadata;
     }
 
-    public ModelElementsStore store(){ return store; }
+    public ModelElementsStore store() {
+        return store;
+    }
 
 }

@@ -21,7 +21,7 @@ public class OpenAPIObject {
             this.paths.build(context);
 
             context.astah().commitTransaction();
-        } catch (Exception e){
+        } catch (Exception e) {
             context.astah().abortTransaction();
             throw new AstahRuntimeException(e);
         }
