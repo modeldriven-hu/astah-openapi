@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
@@ -126,7 +127,13 @@ public class PathObject {
             name = path.startsWith("/") ? path.substring(1) : path;
         }
 
-        return context.astah().findOrCreateInterfaceBlock(context.targetPackage(), name);
+        var block = context.astah().findOrCreateInterfaceBlock(context.targetPackage(), name);
+
+        if (Arrays.stream(block.getStereotypes()).noneMatch("REST Interface"::equals)){
+            context.astah().addStereotype(block, "REST Interface");
+        }
+
+        return block;
     }
 
     private <T> List<T> emptyIfNull(List<T> list) {
