@@ -1,13 +1,16 @@
 package hu.modeldriven.astah.core;
 
 import com.change_vision.jude.api.inf.AstahAPI;
+import com.change_vision.jude.api.inf.editor.BlockDefinitionDiagramEditor;
 import com.change_vision.jude.api.inf.editor.SysmlModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.exception.InvalidUsingException;
 import com.change_vision.jude.api.inf.exception.ProjectNotFoundException;
 import com.change_vision.jude.api.inf.model.*;
+import com.change_vision.jude.api.inf.presentation.INodePresentation;
 import com.change_vision.jude.api.inf.project.ProjectAccessor;
 
+import java.awt.geom.Point2D;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -16,12 +19,14 @@ public class AstahRepresentation {
 
     private final ProjectAccessor projectAccessor;
     private final SysmlModelEditor modelEditor;
+    private final BlockDefinitionDiagramEditor blockDefinitionDiagramEditor;
 
     public AstahRepresentation() {
         try {
             this.projectAccessor = AstahAPI.getAstahAPI().getProjectAccessor();
+            this.blockDefinitionDiagramEditor = projectAccessor.getDiagramEditorFactory().getBlockDefinitionDiagramEditor();
             this.modelEditor = projectAccessor.getModelEditorFactory().getSysmlModelEditor();
-        } catch (ClassNotFoundException | InvalidEditingException e) {
+        } catch (ClassNotFoundException | InvalidEditingException | InvalidUsingException e) {
             throw new AstahRuntimeException(e);
         }
     }
@@ -212,11 +217,12 @@ public class AstahRepresentation {
         }
     }
 
-    public void createOperation(IClass parentClass, String name, IClass parameter, IClass returnType, String definition) {
+    public IOperation createOperation(IClass parentClass, String name, IClass parameter, IClass returnType, String definition) {
         try {
             var operation = modelEditor.createOperation(parentClass, name, returnType);
             operation.setDefinition(definition);
             modelEditor.createParameter(operation, "request", parameter);
+            return operation;
         } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);
         }
@@ -236,4 +242,30 @@ public class AstahRepresentation {
             throw new AstahRuntimeException(e);
         }
     }
+
+    public IBlockDefinitionDiagram createBlockDiagram(IPackage parentPackage, String name) {
+        try{
+            return blockDefinitionDiagramEditor.createBlockDefinitionDiagram(parentPackage, name);
+        } catch (InvalidEditingException e){
+            throw new AstahRuntimeException(e);
+        }
+    }
+
+    public INodePresentation addToDiagram(IBlockDefinitionDiagram diagram, IElement model, Point2D location){
+        try{
+            blockDefinitionDiagramEditor.setDiagram(diagram);
+            return blockDefinitionDiagramEditor.createNodePresentation(model, location);
+        } catch (InvalidEditingException e){
+            throw new AstahRuntimeException(e);
+        }
+    }
+
+    public void addStereotype(INamedElement namedElement, String stereotype){
+        try {
+            namedElement.addStereotype(stereotype);
+        } catch (InvalidEditingException e){
+            throw new AstahRuntimeException(e);
+        }
+    }
+
 }

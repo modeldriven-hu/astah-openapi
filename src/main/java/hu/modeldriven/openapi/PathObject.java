@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class PathObject {
@@ -27,32 +28,41 @@ public class PathObject {
 
     public void build(String path, BuildContext context) {
 
-        Function<Operation, Void> invoker = (operation) -> {
+        BiFunction<HttpAction, Operation , Void> invoker = (action, operation) -> {
             if (operation != null) {
-                createOperation(path, operation, context);
+                createOperation(path, action, operation, context);
             }
             return null; // Functional methods typically return a value, null here indicates success
         };
 
-        invoker.apply(item.getGet());
-        invoker.apply(item.getPost());
-        invoker.apply(item.getPut());
-        invoker.apply(item.getDelete());
-        invoker.apply(item.getPatch());
+        invoker.apply(HttpAction.GET, item.getGet());
+        invoker.apply(HttpAction.POST, item.getPost());
+        invoker.apply(HttpAction.PUT, item.getPut());
+        invoker.apply(HttpAction.DELETE, item.getDelete());
+        invoker.apply(HttpAction.PATCH, item.getPatch());
     }
 
-    private void createOperation(String path, Operation operation, BuildContext context) {
+    private void createOperation(String path, HttpAction action, Operation operation, BuildContext context) {
         var interfaceBlock = findOrCreateInterfaceBlock(path, operation, context);
 
         var request = createRequest(operation, context);
         var response = createResponse(operation, context);
 
-        context.astah().createOperation(interfaceBlock, operation.getOperationId(), request, response, operation.getDescription());
+        var op = context.astah().createOperation(interfaceBlock, operation.getOperationId(), request, response,
+                operation.getDescription());
+
+        context.astah().addStereotype(op, StringUtils.capitalize(action.name().toLowerCase()));
+
+        context.store().put(interfaceBlock.getName(), interfaceBlock);
+        context.store().put(request.getName(), request);
+        context.store().put(response.getName(), response);
     }
 
     private IClass createRequest(Operation operation, BuildContext context) {
         var name = StringUtils.capitalize(operation.getOperationId() + "Request");
         var request = context.astah().createBlock(context.targetPackage(), name);
+
+        context.astah().addStereotype(request, "HTTP Request");
 
         for (var parameter : emptyIfNull(operation.getParameters())) {
             createParameter(request, parameter, context);
@@ -78,6 +88,8 @@ public class PathObject {
     private IClass createResponse(Operation operation, BuildContext context) {
         var name = StringUtils.capitalize(operation.getOperationId() + "Response");
         var response = context.astah().createBlock(context.targetPackage(), name);
+
+        context.astah().addStereotype(response, "HTTP Response");
 
         // FIXME support for multiple response types
         if (operation.getResponses().containsKey("200") && operation.getResponses().get("200").getContent() != null) {
