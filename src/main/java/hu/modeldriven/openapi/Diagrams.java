@@ -1,6 +1,9 @@
 package hu.modeldriven.openapi;
 
-import com.change_vision.jude.api.inf.model.*;
+import com.change_vision.jude.api.inf.model.IBlockDefinitionDiagram;
+import com.change_vision.jude.api.inf.model.IClass;
+import com.change_vision.jude.api.inf.model.IInterfaceBlock;
+import com.change_vision.jude.api.inf.model.IOperation;
 import org.apache.commons.lang3.stream.Streams;
 
 import java.awt.geom.Point2D;
@@ -24,17 +27,17 @@ public class Diagrams {
 
         var top = interfaceBlockNode.getHeight() + interfaceBlockNode.getLocation().getY() + 20;
 
-        requestType(operation).ifPresent( type -> context.astah().addToDiagram(diagram, type,
+        requestType(operation).ifPresent(type -> context.astah().addToDiagram(diagram, type,
                 new Point2D.Double(116, top)));
 
-        responseType(operation).ifPresent( type -> context.astah().addToDiagram(diagram, type,
+        responseType(operation).ifPresent(type -> context.astah().addToDiagram(diagram, type,
                 new Point2D.Double(500, top)));
 
     }
 
     private Optional<IClass> requestType(IOperation operation) {
         return Streams.of(operation.getParameters())
-                .filter(p -> "in".equals(p.getDirection().toLowerCase()))
+                .filter(p -> "in".equalsIgnoreCase(p.getDirection()))
                 .map(p -> p.getType())
                 .findFirst();
     }

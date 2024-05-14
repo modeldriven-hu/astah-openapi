@@ -23,7 +23,7 @@ public class ModelElementsStore {
         return this.modelElements.get(name);
     }
 
-    public Set<Map.Entry<String, IClass>> entrySet(){
+    public Set<Map.Entry<String, IClass>> entrySet() {
         return this.modelElements.entrySet();
     }
 

@@ -19,7 +19,7 @@ public class ImportOpenAPIAction implements IPluginActionDelegate {
 
         var targetPackage = astah.selectedPackageInTree();
 
-        if (targetPackage == null){
+        if (targetPackage == null) {
             JOptionPane.showMessageDialog(window.getParent(), "Please select a package");
             return null;
         }

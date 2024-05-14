@@ -63,7 +63,7 @@ public class AstahRepresentation {
         }
     }
 
-    public IAttribute createValueAttribute(IClass owner,String name, IClass type) {
+    public IAttribute createValueAttribute(IClass owner, String name, IClass type) {
         try {
             return modelEditor.createValueAttribute(owner, name, type);
         } catch (InvalidEditingException e) {
@@ -71,7 +71,7 @@ public class AstahRepresentation {
         }
     }
 
-    public IAttribute createValueAttribute(IClass owner,String name, IClass type, String definition) {
+    public IAttribute createValueAttribute(IClass owner, String name, IClass type, String definition) {
         try {
             var attribute = modelEditor.createValueAttribute(owner, name, type);
             attribute.setDefinition(definition);
@@ -95,7 +95,7 @@ public class AstahRepresentation {
         return null;
     }
 
-    public IPackage selectedPackageInTree(){
+    public IPackage selectedPackageInTree() {
         try {
             var entities = projectAccessor.getViewManager().getProjectViewManager().getSelectedEntities();
 
@@ -244,26 +244,26 @@ public class AstahRepresentation {
     }
 
     public IBlockDefinitionDiagram createBlockDiagram(IPackage parentPackage, String name) {
-        try{
+        try {
             return blockDefinitionDiagramEditor.createBlockDefinitionDiagram(parentPackage, name);
-        } catch (InvalidEditingException e){
+        } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);
         }
     }
 
-    public INodePresentation addToDiagram(IBlockDefinitionDiagram diagram, IElement model, Point2D location){
-        try{
+    public INodePresentation addToDiagram(IBlockDefinitionDiagram diagram, IElement model, Point2D location) {
+        try {
             blockDefinitionDiagramEditor.setDiagram(diagram);
             return blockDefinitionDiagramEditor.createNodePresentation(model, location);
-        } catch (InvalidEditingException e){
+        } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);
         }
     }
 
-    public void addStereotype(INamedElement namedElement, String stereotype){
+    public void addStereotype(INamedElement namedElement, String stereotype) {
         try {
             namedElement.addStereotype(stereotype);
-        } catch (InvalidEditingException e){
+        } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);
         }
     }

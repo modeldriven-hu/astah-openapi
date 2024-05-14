@@ -15,7 +15,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 public class PathObject {
 
@@ -29,7 +28,7 @@ public class PathObject {
 
     public void build(String path, BuildContext context) {
 
-        BiFunction<HttpAction, Operation , Void> invoker = (action, operation) -> {
+        BiFunction<HttpAction, Operation, Void> invoker = (action, operation) -> {
             if (operation != null) {
                 createOperation(path, action, operation, context);
             }
@@ -129,7 +128,7 @@ public class PathObject {
 
         var block = context.astah().findOrCreateInterfaceBlock(context.targetPackage(), name);
 
-        if (Arrays.stream(block.getStereotypes()).noneMatch("REST Interface"::equals)){
+        if (Arrays.stream(block.getStereotypes()).noneMatch("REST Interface"::equals)) {
             context.astah().addStereotype(block, "REST Interface");
         }
 
