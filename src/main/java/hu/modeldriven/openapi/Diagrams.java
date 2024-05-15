@@ -1,5 +1,6 @@
 package hu.modeldriven.openapi;
 
+import com.change_vision.jude.api.inf.exception.InvalidEditingException;
 import com.change_vision.jude.api.inf.model.IBlockDefinitionDiagram;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IInterfaceBlock;
@@ -27,12 +28,22 @@ public class Diagrams {
 
         var top = interfaceBlockNode.getHeight() + interfaceBlockNode.getLocation().getY() + 20;
 
-        requestType(operation).ifPresent(type -> context.astah().addToDiagram(diagram, type,
-                new Point2D.Double(116, top)));
+        requestType(operation).ifPresent(type ->
+                addToDiagram(diagram, type, new Point2D.Double(116, top), context));
 
-        responseType(operation).ifPresent(type -> context.astah().addToDiagram(diagram, type,
-                new Point2D.Double(500, top)));
+        responseType(operation).ifPresent(type -> addToDiagram(diagram, type,
+                new Point2D.Double(500, top), context));
+    }
 
+    private void addToDiagram(IBlockDefinitionDiagram diagram, IClass type, Point2D location, BuildContext context) {
+        var node = context.astah().addToDiagram(diagram, type, location);
+
+        try {
+            // FIXME figure out how to display the values
+            node.setProperty("block_values_visibility", "true");
+        } catch (InvalidEditingException e) {
+            e.printStackTrace();
+        }
     }
 
     private Optional<IClass> requestType(IOperation operation) {

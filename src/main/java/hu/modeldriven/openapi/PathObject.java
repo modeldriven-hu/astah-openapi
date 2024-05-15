@@ -65,7 +65,7 @@ public class PathObject {
         context.astah().addStereotype(request, "HTTP Request");
 
         for (var parameter : emptyIfNull(operation.getParameters())) {
-            createParameter(request, parameter, context);
+            createRequestParameter(request, parameter, context);
         }
 
         if (operation.getRequestBody() != null && operation.getRequestBody().getContent() != null) {
@@ -75,14 +75,17 @@ public class PathObject {
         return request;
     }
 
-    private void createParameter(IBlock owner, Parameter parameter, BuildContext context) {
+    private void createRequestParameter(IBlock owner, Parameter parameter, BuildContext context) {
         var name = parameter.getName();
         var type = context.typeResolver().getOrCreate(owner, name, parameter.getSchema());
         var attribute = context.astah().createValueAttribute(owner, name, type, parameter.getDescription());
 
         context.astah().setMultiplicity(attribute, !parameter.getRequired() ? 0 : 1, 1);
 
-        // FIXME create stereotype based on parameter.getIn()
+        if (parameter.getIn() != null) {
+            var stereotypeName = StringUtils.capitalize(parameter.getIn()) + "Param";
+            context.astah().addStereotype(attribute, stereotypeName);
+        }
     }
 
     private IClass createResponse(Operation operation, BuildContext context) {
