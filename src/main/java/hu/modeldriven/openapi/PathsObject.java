@@ -1,5 +1,6 @@
 package hu.modeldriven.openapi;
 
+import hu.modeldriven.astah.core.AstahLogger;
 import io.swagger.v3.oas.models.Paths;
 
 import java.util.Map;
@@ -19,6 +20,7 @@ public class PathsObject {
 
     public void build(BuildContext context) {
         for (var entry : pathObjects.entrySet()) {
+            AstahLogger.log("Building pathObject: " + entry.getKey());
             entry.getValue().build(entry.getKey(), context);
         }
     }

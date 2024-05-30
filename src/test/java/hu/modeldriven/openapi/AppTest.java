@@ -21,7 +21,8 @@ public class AppTest {
     @Test
     public void testParse() throws Exception {
         var parser = new OpenAPIParser();
-        var result = parser.readLocation("https://petstore3.swagger.io/api/v3/openapi.json", null, null);
+        //var result = parser.readLocation("https://petstore3.swagger.io/api/v3/openapi.json", null, null);
+        var result = parser.readLocation("C:/home/digivet.yaml", null, null);
         var openAPIObject = new OpenAPIObject(result.getOpenAPI());
         var astahRepresentation = Mockito.mock(AstahRepresentation.class);
 

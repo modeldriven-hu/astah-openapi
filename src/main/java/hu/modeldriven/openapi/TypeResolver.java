@@ -5,16 +5,13 @@ import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueType;
 import hu.modeldriven.astah.core.AstahRepresentation;
+import hu.modeldriven.astah.core.AstahLogger;
 import io.swagger.v3.oas.models.media.*;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.stream.Stream;
 
 public class TypeResolver {
-
-    private static final Logger logger = LoggerFactory.getLogger(TypeResolver.class);
 
     private static final String OPEN_API_PATH = "OpenAPI";
 
@@ -44,11 +41,11 @@ public class TypeResolver {
                 return store.get(getReferenceTypeNameOfArray(schema));
             } else if (hasArrayObject(schema)) {
                 // FIXME not implemented
-                logger.info("Arrays containing objects not implemented");
+                AstahLogger.log("Arrays containing objects not implemented");
                 return null;
             } else if (hasArrayArray(schema)) {
                 // FIXME not implemented
-                logger.info("Arrays containing arrays not implemented");
+                AstahLogger.log("Arrays containing arrays not implemented");
                 return null;
             } else {
                 return getCoreTypeOfArray(schema);

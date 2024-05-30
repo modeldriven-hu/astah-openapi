@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class FileLogger {
+public class AstahLogger {
 
     private static String filePath;
 
@@ -23,7 +23,7 @@ public class FileLogger {
         var tempDir = System.getProperty("java.io.tmpdir");
 
         // Construct the full file path
-        FileLogger.filePath = Paths.get(tempDir, fileName).toString();
+        AstahLogger.filePath = Paths.get(tempDir, fileName).toString();
     }
 
     public static void log(String message) {
@@ -36,6 +36,8 @@ public class FileLogger {
 
             // Close the writer
             writer.close();
+
+            System.err.println(message);
         } catch (IOException e) {
             e.printStackTrace();
         }

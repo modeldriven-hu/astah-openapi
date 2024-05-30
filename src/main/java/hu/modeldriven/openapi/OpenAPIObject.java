@@ -1,6 +1,7 @@
 package hu.modeldriven.openapi;
 
 import hu.modeldriven.astah.core.AstahRuntimeException;
+import hu.modeldriven.astah.core.AstahLogger;
 import io.swagger.v3.oas.models.OpenAPI;
 
 public class OpenAPIObject {
@@ -19,11 +20,18 @@ public class OpenAPIObject {
         try {
             context.astah().beginTransaction();
 
+            AstahLogger.log("Importing OpenAPI....");
+            AstahLogger.log("Creating types if they don't exist");
+
             context.typeResolver().createTypesIfNotExists();
+
+            AstahLogger.log("Building model elements and diagrams");
 
             this.components.build(context);
             this.paths.build(context);
             this.diagrams.build(context);
+
+            AstahLogger.log("Building complete, commiting...");
 
             context.astah().commitTransaction();
         } catch (Exception e) {
@@ -31,6 +39,5 @@ public class OpenAPIObject {
             throw new AstahRuntimeException(e);
         }
     }
-
 
 }

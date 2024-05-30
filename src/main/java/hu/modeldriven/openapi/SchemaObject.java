@@ -1,29 +1,32 @@
 package hu.modeldriven.openapi;
 
 import com.change_vision.jude.api.inf.model.IBlock;
+import hu.modeldriven.astah.core.AstahLogger;
+import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class SchemaObject {
 
-    private static final Logger logger = LoggerFactory.getLogger(SchemaObject.class);
-
-    private final Schema<?> schema;
+    private final ObjectSchema schema;
     private final Map<String, SchemaProperty> schemaProperties;
 
-    public SchemaObject(Schema<?> schema) {
+    public SchemaObject(ObjectSchema schema) {
         this.schema = schema;
 
-        this.schemaProperties = schema.getProperties().entrySet()
-                .stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> new SchemaProperty(entry.getValue())));
+        if (schema.getProperties() == null){
+            this.schemaProperties = Collections.emptyMap();
+        } else {
+            this.schemaProperties = schema.getProperties().entrySet()
+                    .stream()
+                    .collect(Collectors.toMap(
+                            Map.Entry::getKey,
+                            entry -> new SchemaProperty(entry.getValue())));
+        }
     }
 
     public boolean isResolvable(Set<String> resolvedSchemaNames) {
@@ -42,14 +45,13 @@ public class SchemaObject {
 
         for (var entry : schemaProperties.entrySet()) {
 
-            logger.info("\t[SchemaObject] Building property: {}", entry.getKey());
+            AstahLogger.log("\t[SchemaObject] Building property: " + entry.getKey());
 
             SchemaProperty schemaProperty = entry.getValue();
             schemaProperty.build(entry.getKey(), schema, owner, context);
 
-            logger.info("\t[SchemaObject] Building Completed");
+            AstahLogger.log("\t[SchemaObject] Building Completed");
         }
     }
-
 
 }

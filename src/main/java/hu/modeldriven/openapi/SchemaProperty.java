@@ -2,17 +2,14 @@ package hu.modeldriven.openapi;
 
 import com.change_vision.jude.api.inf.model.IAttribute;
 import com.change_vision.jude.api.inf.model.IBlock;
+import hu.modeldriven.astah.core.AstahLogger;
 import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Set;
 
 public class SchemaProperty {
-
-    private static final Logger logger = LoggerFactory.getLogger(SchemaProperty.class);
 
     private final Schema<?> schema;
 
@@ -40,7 +37,7 @@ public class SchemaProperty {
         var type = context.typeResolver().getOrCreate(owner, name, schema);
 
         if (type == null && !(schema instanceof ObjectSchema || schema instanceof ArraySchema)) {
-            logger.info("***** [SchemaProperty.class] Type not supported: {}", schema);
+            AstahLogger.log("***** [SchemaProperty.class] Type not supported: " + schema);
         }
 
         // based on the type, we are adding an attribute or a part relationship
