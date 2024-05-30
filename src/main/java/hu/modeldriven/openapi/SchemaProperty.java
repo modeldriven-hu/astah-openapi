@@ -37,7 +37,8 @@ public class SchemaProperty {
         var type = context.typeResolver().getOrCreate(owner, name, schema);
 
         if (type == null && !(schema instanceof ObjectSchema || schema instanceof ArraySchema)) {
-            AstahLogger.log("***** [SchemaProperty.class] Type not supported: " + schema);
+            AstahLogger.log("***** [SchemaProperty.class] Type not supported: " + schema + " ,skipping....");
+            return;
         }
 
         // based on the type, we are adding an attribute or a part relationship

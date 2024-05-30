@@ -3,7 +3,6 @@ package hu.modeldriven.openapi;
 import com.change_vision.jude.api.inf.model.IBlock;
 import hu.modeldriven.astah.core.AstahLogger;
 import io.swagger.v3.oas.models.media.ObjectSchema;
-import io.swagger.v3.oas.models.media.Schema;
 
 import java.util.Collections;
 import java.util.Map;
@@ -18,7 +17,7 @@ public class SchemaObject {
     public SchemaObject(ObjectSchema schema) {
         this.schema = schema;
 
-        if (schema.getProperties() == null){
+        if (schema.getProperties() == null) {
             this.schemaProperties = Collections.emptyMap();
         } else {
             this.schemaProperties = schema.getProperties().entrySet()

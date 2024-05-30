@@ -7,7 +7,9 @@ import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,8 +31,7 @@ public class ComponentSchemas {
 
             switch (entry.getValue()) {
                 case ObjectSchema schema -> this.schemaObjects.put(entry.getKey(), new SchemaObject(schema));
-                case ArraySchema arraySchema ->
-                        this.schemaArrays.put(entry.getKey(), new SchemaArray(arraySchema));
+                case ArraySchema arraySchema -> this.schemaArrays.put(entry.getKey(), new SchemaArray(arraySchema));
                 case StringSchema schema when schema.getEnum() != null ->
                         this.schemaStrings.put(entry.getKey(), new SchemaString(entry.getKey(), schema));
                 case null, default ->
@@ -45,7 +46,7 @@ public class ComponentSchemas {
         try {
 
             // build enums from schema strings
-            for (var entry: schemaStrings.entrySet()){
+            for (var entry : schemaStrings.entrySet()) {
                 entry.getValue().build(context);
             }
 
@@ -92,12 +93,12 @@ public class ComponentSchemas {
             infiniteLoopCounter++;
         } while (orderedSchemaObjects.size() != schemaObjects.size() && infiniteLoopCounter < schemaObjects.size());
 
-        resolveCycle(schemaObjects, schemaStrings, orderedSchemaObjects);
-
         if (orderedSchemaObjects.size() != schemaObjects.size()) {
             throw new ModelBuildingException("Infinite reference loop found in schema, the following items remained: "
-                    + calculateDifference(schemaObjects, orderedSchemaObjects) );
+                    + calculateDifference(schemaObjects, orderedSchemaObjects));
         }
+
+        AstahLogger.log("All schemas are resolved, continuing...");
 
         return orderedSchemaObjects;
     }
@@ -123,7 +124,7 @@ public class ComponentSchemas {
         }
     }
 
-    private String calculateDifference(Map<String, SchemaObject> schemaObjects, LinkedHashMap<String, SchemaObject> orderedSchemaObjects){
+    private String calculateDifference(Map<String, SchemaObject> schemaObjects, LinkedHashMap<String, SchemaObject> orderedSchemaObjects) {
         var set1 = new HashSet<>(schemaObjects.keySet());
         var set2 = new HashSet<>(orderedSchemaObjects.keySet());
 

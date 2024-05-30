@@ -1,4 +1,5 @@
 package hu.modeldriven.openapi;
+
 import io.swagger.v3.oas.models.media.StringSchema;
 
 public class SchemaString {

@@ -1,7 +1,7 @@
 package hu.modeldriven.openapi;
 
-import hu.modeldriven.astah.core.AstahRuntimeException;
 import hu.modeldriven.astah.core.AstahLogger;
+import hu.modeldriven.astah.core.AstahRuntimeException;
 import io.swagger.v3.oas.models.OpenAPI;
 
 public class OpenAPIObject {

@@ -4,11 +4,12 @@ import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IPackage;
 import com.change_vision.jude.api.inf.model.IValueType;
-import hu.modeldriven.astah.core.AstahRepresentation;
 import hu.modeldriven.astah.core.AstahLogger;
+import hu.modeldriven.astah.core.AstahRepresentation;
 import io.swagger.v3.oas.models.media.*;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class TypeResolver {
@@ -26,7 +27,7 @@ public class TypeResolver {
     public void createTypesIfNotExists() {
         var typePackage = astah.findOrCreatePackage(OPEN_API_PATH);
 
-        Stream.of("DateTime", "String", "Boolean", "Integer", "Number")
+        Stream.of("DateTime", "String", "Boolean", "Integer", "Number", "UUID", "Map", "Email", "Password")
                 .forEach(name -> {
                     if (findByTypeName(astah, name) == null) {
                         astah.createValueType(typePackage, name);
@@ -64,10 +65,31 @@ public class TypeResolver {
                     astah.createEnumeration((IPackage) owner.getOwner(), name, ((StringSchema) schema).getEnum()));
         }
 
+        if (isObjectSchema(schema)) {
+
+            var recordName = StringUtils.capitalize(owner.getName()) + StringUtils.capitalize(fieldName) + "Record";
+
+            var block = store.computeIfAbsent(recordName, name ->
+                    astah.createBlock((IPackage) owner.getOwner(), name));
+
+            for (Map.Entry<String, Schema> property : schema.getProperties().entrySet()) {
+                var name = property.getKey();
+                var type = getOrCreate((IBlock) block, property.getKey(), property.getValue());
+
+                if (type instanceof IBlock typeBlock) {
+                    astah.createPartRelationship(owner, name, typeBlock);
+                } else {
+                    astah.createValueAttribute(owner, name, type);
+                }
+            }
+
+            return block;
+        }
+
         return resolveCoreType(schema);
     }
 
-    public IClass createGlobalEnum(IPackage parentPackage, String enumName, Schema<?> schema){
+    public IClass createGlobalEnum(IPackage parentPackage, String enumName, Schema<?> schema) {
         if (isEnum(schema)) {
             return store.computeIfAbsent(enumName, name ->
                     astah.createEnumeration(parentPackage, name, ((StringSchema) schema).getEnum()));
@@ -79,8 +101,12 @@ public class TypeResolver {
     private IClass resolveCoreType(Schema<?> schema) {
 
         return switch (schema) {
-            case DateTimeSchema d -> findByTypeName(astah, "DateTime");
+            case EmailSchema e -> findByTypeName(astah, "Email");
+            case PasswordSchema p -> findByTypeName(astah, "Password");
+            case MapSchema m -> findByTypeName(astah, "Map");
             case StringSchema s -> findByTypeName(astah, "String");
+            case UUIDSchema u -> findByTypeName(astah, "UUID");
+            case DateTimeSchema d -> findByTypeName(astah, "DateTime");
             case BooleanSchema b -> findByTypeName(astah, "Boolean");
             case IntegerSchema i -> findByTypeName(astah, "Integer");
             case NumberSchema n -> findByTypeName(astah, "Number");
@@ -95,6 +121,10 @@ public class TypeResolver {
 
     private boolean isEnum(Schema<?> schema) {
         return schema instanceof StringSchema && ((StringSchema) schema).getEnum() != null;
+    }
+
+    private boolean isObjectSchema(Schema<?> schema) {
+        return schema instanceof ObjectSchema;
     }
 
     private boolean isArray(Schema<?> schema) {
