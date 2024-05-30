@@ -6,11 +6,10 @@ import io.swagger.v3.oas.models.media.ArraySchema;
 import io.swagger.v3.oas.models.media.ObjectSchema;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ComponentSchemas {
 
@@ -28,14 +27,14 @@ public class ComponentSchemas {
 
             AstahLogger.log("Parsing " + entry.getKey());
 
-            if (entry.getValue() instanceof ObjectSchema schema) {
-                this.schemaObjects.put(entry.getKey(), new SchemaObject(schema));
-            } else if (entry.getValue() instanceof ArraySchema) {
-                this.schemaArrays.put(entry.getKey(), new SchemaArray(entry.getValue()));
-            } else if (entry.getValue() instanceof StringSchema schema && schema.getEnum() != null) {
-                this.schemaStrings.put(entry.getKey(), new SchemaString(entry.getKey(), schema));
-            }else {
-                AstahLogger.log("[ComponentSchemas] Schema type not supported " + entry.getValue().getClass());
+            switch (entry.getValue()) {
+                case ObjectSchema schema -> this.schemaObjects.put(entry.getKey(), new SchemaObject(schema));
+                case ArraySchema arraySchema ->
+                        this.schemaArrays.put(entry.getKey(), new SchemaArray(arraySchema));
+                case StringSchema schema when schema.getEnum() != null ->
+                        this.schemaStrings.put(entry.getKey(), new SchemaString(entry.getKey(), schema));
+                case null, default ->
+                        AstahLogger.log("[ComponentSchemas] Schema type not supported " + entry.getValue().getClass());
             }
         }
 
@@ -47,12 +46,11 @@ public class ComponentSchemas {
 
             // build enums from schema strings
             for (var entry: schemaStrings.entrySet()){
-                var enumeration = entry.getValue().build(context);
-                context.store().put(entry.getKey(), enumeration);
+                entry.getValue().build(context);
             }
 
             // order entries by resolvability
-            var orderedSchemaObjects = orderByResolvability(schemaObjects);
+            var orderedSchemaObjects = orderByResolvability(schemaObjects, schemaStrings);
 
             // create model representation
             for (var entry : orderedSchemaObjects.entrySet()) {
@@ -83,38 +81,62 @@ public class ComponentSchemas {
         }
     }
 
-    private Map<String, SchemaObject> orderByResolvability(Map<String, SchemaObject> schemaObjects) throws ModelBuildingException {
+    private Map<String, SchemaObject> orderByResolvability(Map<String, SchemaObject> schemaObjects, Map<String, SchemaString> schemaStrings) throws ModelBuildingException {
 
         var orderedSchemaObjects = new LinkedHashMap<String, SchemaObject>();
 
         var infiniteLoopCounter = 0;
 
         do {
-            for (var entry : schemaObjects.entrySet()) {
-
-                var schemaName = entry.getKey();
-                var schemaObject = entry.getValue();
-
-                if (!orderedSchemaObjects.containsKey(schemaName)) {
-
-                    if (schemaObject.isResolvable(orderedSchemaObjects.keySet())) {
-                        orderedSchemaObjects.put(schemaName, schemaObject);
-                    } else {
-                        AstahLogger.log("[ComponentSchemas.class] Cannot resolve " + schemaName);
-                    }
-
-                }
-            }
-
+            resolveCycle(schemaObjects, schemaStrings, orderedSchemaObjects);
             infiniteLoopCounter++;
-
         } while (orderedSchemaObjects.size() != schemaObjects.size() && infiniteLoopCounter < schemaObjects.size());
 
+        resolveCycle(schemaObjects, schemaStrings, orderedSchemaObjects);
+
         if (orderedSchemaObjects.size() != schemaObjects.size()) {
-            throw new ModelBuildingException("Infinite reference loop found in schema");
+            throw new ModelBuildingException("Infinite reference loop found in schema, the following items remained: "
+                    + calculateDifference(schemaObjects, orderedSchemaObjects) );
         }
 
         return orderedSchemaObjects;
+    }
+
+    private void resolveCycle(Map<String, SchemaObject> schemaObjects, Map<String, SchemaString> schemaStrings, LinkedHashMap<String, SchemaObject> orderedSchemaObjects) {
+        for (var entry : schemaObjects.entrySet()) {
+
+            var schemaName = entry.getKey();
+            var schemaObject = entry.getValue();
+
+            if (!orderedSchemaObjects.containsKey(schemaName)) {
+
+                var mergedKeys = Stream.concat(orderedSchemaObjects.keySet().stream(), schemaStrings.keySet().stream())
+                        .collect(Collectors.toSet());
+
+                if (schemaObject.isResolvable(mergedKeys)) {
+                    orderedSchemaObjects.put(schemaName, schemaObject);
+                } else {
+                    AstahLogger.log("[ComponentSchemas.class] Cannot resolve " + schemaName);
+                }
+
+            }
+        }
+    }
+
+    private String calculateDifference(Map<String, SchemaObject> schemaObjects, LinkedHashMap<String, SchemaObject> orderedSchemaObjects){
+        var set1 = new HashSet<>(schemaObjects.keySet());
+        var set2 = new HashSet<>(orderedSchemaObjects.keySet());
+
+        var uniqueToSet1 = schemaObjects.keySet().stream()
+                .filter(s -> !set2.contains(s))
+                .collect(Collectors.toSet());
+
+        var uniqueToSet2 = orderedSchemaObjects.keySet().stream()
+                .filter(s -> !set1.contains(s))
+                .collect(Collectors.toSet());
+
+        return Stream.concat(uniqueToSet1.stream(), uniqueToSet2.stream())
+                .collect(Collectors.joining(", "));
     }
 
 }

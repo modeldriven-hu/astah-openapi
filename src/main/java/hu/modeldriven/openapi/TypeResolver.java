@@ -67,6 +67,15 @@ public class TypeResolver {
         return resolveCoreType(schema);
     }
 
+    public IClass createGlobalEnum(IPackage parentPackage, String enumName, Schema<?> schema){
+        if (isEnum(schema)) {
+            return store.computeIfAbsent(enumName, name ->
+                    astah.createEnumeration(parentPackage, name, ((StringSchema) schema).getEnum()));
+        }
+
+        return resolveCoreType(schema);
+    }
+
     private IClass resolveCoreType(Schema<?> schema) {
 
         return switch (schema) {

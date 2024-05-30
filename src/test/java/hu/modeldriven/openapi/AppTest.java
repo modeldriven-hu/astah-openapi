@@ -42,6 +42,7 @@ public class AppTest {
         BuildContext instruction = Mockito.mock(BuildContext.class);
         when(instruction.astah()).thenReturn(astahRepresentation);
         when(instruction.typeResolver()).thenReturn(resolver);
+        when(instruction.store()).thenReturn(store);
 
         openAPIObject.build(instruction);
     }
