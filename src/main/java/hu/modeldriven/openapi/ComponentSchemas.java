@@ -55,18 +55,7 @@ public class ComponentSchemas {
 
             // create model representation
             for (var entry : orderedSchemaObjects.entrySet()) {
-
-                AstahLogger.log("[ComponentSchemas.class] Building schema: " + entry.getKey());
-
-                // Create frame as a SysML block, FIXME: this is the responsibility of the entry
-
-                var block = context.astah().createBlock(context.targetPackage(), entry.getKey());
-                context.store().put(entry.getKey(), block);
-
-                // Create inner parts of the block, like fields
-
-                var schemaObject = entry.getValue();
-                schemaObject.build(block, context);
+                entry.getValue().build(entry.getKey(), context);
             }
 
             // Then we create the schema arrays that are referencing the previously created

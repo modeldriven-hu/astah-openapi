@@ -30,15 +30,21 @@ public class SchemaObject {
         return schemaProperties.values().stream().allMatch(property -> property.isResolvable(resolvedSchemaNames));
     }
 
-    public void build(IBlock owner, BuildContext context) {
-        // it depends on the type of the property of what kind of connection has to be built
+    public void build(String name, BuildContext context) {
+
+        AstahLogger.log("[ComponentSchemas.class] Building schema: " + name);
+
+        var block = context.astah().createBlock(context.targetPackage(), name);
+        context.store().put(name, block);
+
+        // Create inner parts of the block, like fields
 
         for (var entry : schemaProperties.entrySet()) {
 
             AstahLogger.log("\t[SchemaObject] Building property: " + entry.getKey());
 
             SchemaProperty schemaProperty = entry.getValue();
-            schemaProperty.build(entry.getKey(), schema, owner, context);
+            schemaProperty.build(entry.getKey(), schema, block, context);
 
             AstahLogger.log("\t[SchemaObject] Building Completed");
         }
