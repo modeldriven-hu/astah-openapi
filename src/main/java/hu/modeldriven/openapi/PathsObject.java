@@ -12,15 +12,12 @@ public class PathsObject {
     private final Map<String, PathObject> pathObjects;
 
     public PathsObject(Paths paths) {
-        if (paths == null) {
-            this.pathObjects = new HashMap<>();
-        } else {
-            this.pathObjects = paths.entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            entry -> new PathObject(entry.getValue())));
-        }
+        this.pathObjects = (paths == null) ? new HashMap<>() :
+                paths.entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> new PathObject(entry.getValue())
+                        ));
     }
 
     public void build(BuildContext context) {

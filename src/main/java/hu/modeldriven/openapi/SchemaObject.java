@@ -17,26 +17,17 @@ public class SchemaObject {
     public SchemaObject(ObjectSchema schema) {
         this.schema = schema;
 
-        if (schema.getProperties() == null) {
-            this.schemaProperties = Collections.emptyMap();
-        } else {
-            this.schemaProperties = schema.getProperties().entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey,
-                            entry -> new SchemaProperty(entry.getValue())));
-        }
+        this.schemaProperties = (schema.getProperties() == null) ?
+                Collections.emptyMap() :
+                schema.getProperties().entrySet().stream()
+                        .collect(Collectors.toMap(
+                                Map.Entry::getKey,
+                                entry -> new SchemaProperty(entry.getValue())
+                        ));
     }
 
     public boolean isResolvable(Set<String> resolvedSchemaNames) {
-
-        for (var property : schemaProperties.values()) {
-            if (!property.isResolvable(resolvedSchemaNames)) {
-                return false;
-            }
-        }
-
-        return true;
+        return schemaProperties.values().stream().allMatch(property -> property.isResolvable(resolvedSchemaNames));
     }
 
     public void build(IBlock owner, BuildContext context) {
