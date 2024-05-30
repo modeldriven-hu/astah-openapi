@@ -37,56 +37,68 @@ public class TypeResolver {
 
     public IClass getOrCreate(IBlock owner, String fieldName, Schema<?> schema) {
 
-        if (isArray(schema)) {
-            if (hasArrayReference(schema)) {
-                return store.get(getReferenceTypeNameOfArray(schema));
-            } else if (hasArrayObject(schema)) {
-                // FIXME not implemented
-                AstahLogger.log("Arrays containing objects not implemented");
-                return null;
-            } else if (hasArrayArray(schema)) {
-                // FIXME not implemented
-                AstahLogger.log("Arrays containing arrays not implemented");
-                return null;
-            } else {
-                return getCoreTypeOfArray(schema);
-            }
-        }
-
         if (isReference(schema)) {
             return store.get(getReferenceTypeName(schema));
         }
 
+        if (isArray(schema)) {
+            return handleArraySchema(schema);
+        }
+
         if (isEnum(schema)) {
-
-            var enumName = StringUtils.capitalize(owner.getName()) + StringUtils.capitalize(fieldName) + "Enum";
-
-            return store.computeIfAbsent(enumName, name ->
-                    astah.createEnumeration((IPackage) owner.getOwner(), name, ((StringSchema) schema).getEnum()));
+            return handleEnumSchema(owner, fieldName, schema);
         }
 
         if (isObjectSchema(schema)) {
-
-            var recordName = StringUtils.capitalize(owner.getName()) + StringUtils.capitalize(fieldName) + "Record";
-
-            var block = store.computeIfAbsent(recordName, name ->
-                    astah.createBlock((IPackage) owner.getOwner(), name));
-
-            for (Map.Entry<String, Schema> property : schema.getProperties().entrySet()) {
-                var name = property.getKey();
-                var type = getOrCreate((IBlock) block, property.getKey(), property.getValue());
-
-                if (type instanceof IBlock typeBlock) {
-                    astah.createPartRelationship(owner, name, typeBlock);
-                } else {
-                    astah.createValueAttribute(owner, name, type);
-                }
-            }
-
-            return block;
+            return handleObjectSchema(owner, fieldName, schema);
         }
 
         return resolveCoreType(schema);
+    }
+
+    private IClass handleArraySchema(Schema<?> schema) {
+        if (hasArrayReference(schema)) {
+            return store.get(getReferenceTypeNameOfArray(schema));
+        } else if (hasArrayObject(schema)) {
+            // FIXME not implemented
+            AstahLogger.log("Arrays containing objects not implemented");
+            return null;
+        } else if (hasArrayArray(schema)) {
+            // FIXME not implemented
+            AstahLogger.log("Arrays containing arrays not implemented");
+            return null;
+        } else {
+            return getCoreTypeOfArray(schema);
+        }
+    }
+
+    private IClass handleEnumSchema(IBlock owner, String fieldName, Schema<?> schema) {
+        var enumName = StringUtils.capitalize(owner.getName()) + StringUtils.capitalize(fieldName) + "Enum";
+
+        return store.computeIfAbsent(enumName, name ->
+                astah.createEnumeration((IPackage) owner.getOwner(), name, ((StringSchema) schema).getEnum()));
+    }
+
+    private IClass handleObjectSchema(IBlock owner, String fieldName, Schema<?> schema) {
+        var recordName = StringUtils.capitalize(owner.getName()) + StringUtils.capitalize(fieldName) + "Record";
+
+        var iClass = store.computeIfAbsent(recordName, name ->
+                astah.createBlock((IPackage) owner.getOwner(), name));
+
+        var block = (IBlock) iClass;
+
+        for (Map.Entry<String, Schema> property : schema.getProperties().entrySet()) {
+            var name = property.getKey();
+            var type = getOrCreate(block, property.getKey(), property.getValue());
+
+            if (type instanceof IBlock typeBlock) {
+                astah.createPartRelationship(block, name, typeBlock);
+            } else {
+                astah.createValueAttribute(block, name, type);
+            }
+        }
+
+        return block;
     }
 
     public IClass createGlobalEnum(IPackage parentPackage, String enumName, Schema<?> schema) {

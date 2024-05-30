@@ -25,7 +25,6 @@ public class PathsObject {
 
     public void build(BuildContext context) {
         for (var entry : pathObjects.entrySet()) {
-            AstahLogger.log("Building pathObject: " + entry.getKey());
             entry.getValue().build(entry.getKey(), context);
         }
     }

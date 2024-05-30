@@ -3,6 +3,7 @@ package hu.modeldriven.openapi;
 import com.change_vision.jude.api.inf.model.IBlock;
 import com.change_vision.jude.api.inf.model.IClass;
 import com.change_vision.jude.api.inf.model.IInterfaceBlock;
+import hu.modeldriven.astah.core.AstahLogger;
 import io.swagger.v3.oas.models.Operation;
 import io.swagger.v3.oas.models.PathItem;
 import io.swagger.v3.oas.models.media.Content;
@@ -43,15 +44,34 @@ public class PathObject {
     }
 
     private void createOperation(String path, HttpAction action, Operation operation, BuildContext context) {
+
+        if (operation.getOperationId() == null) {
+            AstahLogger.log("Missing operationId for " + path + " " + action + ", skipping creation of operation!");
+            return;
+        }
+
+        AstahLogger.log("OperationId presented for " + path + " " + action + ", building...");
+
         var interfaceBlock = findOrCreateInterfaceBlock(path, operation, context);
 
+        AstahLogger.log("Interface block created: " + interfaceBlock.getName());
+
         var request = createRequest(operation, context);
+
+        AstahLogger.log("Request created: " + request.getName());
+
         var response = createResponse(operation, context);
+
+        AstahLogger.log("Response created: " + response.getName());
 
         var op = context.astah().createOperation(interfaceBlock, operation.getOperationId(), request, response,
                 operation.getDescription());
 
+        AstahLogger.log("Operation created: " + operation.getOperationId());
+
         context.astah().addStereotype(op, StringUtils.capitalize(action.name().toLowerCase()));
+
+        AstahLogger.log("Stereotype added");
 
         context.store().put(interfaceBlock.getName(), interfaceBlock);
         context.store().put(request.getName(), request);

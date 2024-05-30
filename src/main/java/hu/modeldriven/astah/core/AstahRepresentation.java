@@ -220,8 +220,13 @@ public class AstahRepresentation {
     public IOperation createOperation(IClass parentClass, String name, IClass parameter, IClass returnType, String definition) {
         try {
             var operation = modelEditor.createOperation(parentClass, name, returnType);
-            operation.setDefinition(definition);
+
+            if (definition != null) {
+                operation.setDefinition(definition);
+            }
+
             modelEditor.createParameter(operation, "request", parameter);
+
             return operation;
         } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);
