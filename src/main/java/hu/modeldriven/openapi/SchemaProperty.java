@@ -45,8 +45,8 @@ public class SchemaProperty {
 
         final IAttribute attribute;
 
-        if (type instanceof IBlock) {
-            attribute = astah.createPartRelationship(owner, name, (IBlock) type);
+        if (type instanceof IBlock block) {
+            attribute = astah.createPartRelationship(owner, name, block);
         } else {
             attribute = astah.createValueAttribute(owner, name, type);
         }
