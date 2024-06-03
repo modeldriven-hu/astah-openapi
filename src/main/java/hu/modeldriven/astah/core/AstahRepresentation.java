@@ -1,6 +1,5 @@
 package hu.modeldriven.astah.core;
 
-import com.change_vision.jude.api.inf.AstahAPI;
 import com.change_vision.jude.api.inf.editor.BlockDefinitionDiagramEditor;
 import com.change_vision.jude.api.inf.editor.SysmlModelEditor;
 import com.change_vision.jude.api.inf.exception.InvalidEditingException;
@@ -21,12 +20,12 @@ public class AstahRepresentation {
     private final SysmlModelEditor modelEditor;
     private final BlockDefinitionDiagramEditor blockDefinitionDiagramEditor;
 
-    public AstahRepresentation() {
+    public AstahRepresentation(ProjectAccessor projectAccessor) {
         try {
-            this.projectAccessor = AstahAPI.getAstahAPI().getProjectAccessor();
+            this.projectAccessor = projectAccessor;
             this.blockDefinitionDiagramEditor = projectAccessor.getDiagramEditorFactory().getBlockDefinitionDiagramEditor();
             this.modelEditor = projectAccessor.getModelEditorFactory().getSysmlModelEditor();
-        } catch (ClassNotFoundException | InvalidEditingException | InvalidUsingException e) {
+        } catch (InvalidEditingException | InvalidUsingException e) {
             throw new AstahRuntimeException(e);
         }
     }
