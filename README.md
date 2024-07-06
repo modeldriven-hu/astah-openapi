@@ -16,7 +16,7 @@ The plugin enables importing OpenAPI specifications into Astah SysML tool in ord
 
 - If not exists, a package with name OpenAPI will be created in the project
 - This package will contain the basic types (Boolean, DateTime, Email, Integer, etc.)
-- For each component (a kind of DTO) a block will be created with the corresponding fields, types and multiplicity
+- For each component (a kind of DTO) a block will be created with the corresponding fields, types and multiplicity in the selected package
 - For each endpoint's operation a Request and Response block will be created with the name of the operation as prefix
 - For each tag an interface block is created with << REST Interface >> stereotype
 - Each endpoint's operation an operation of the corresponding block will be created with matching name
