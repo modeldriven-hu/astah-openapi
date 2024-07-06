@@ -31,8 +31,9 @@ The plugin enables importing OpenAPI specifications into Astah SysML tool in ord
  # Limitations
 
  - It is required to have an operation for every endpoint, otherwise the corresponding block operation cannot be created
- - Due to limitations of Astah API adding the additional limits (minLength, maxLength, etc.) as a tagged value of a stereotype is not yet possible
+ - Due to limitations of Astah API adding the additional metadata (minLength, url, etc.) as a tagged value of a stereotype is not yet possible
  - The situation when two component reference each other is not handled - yet: remove one of the references and add them by hand
  - Update of existing model is not yet handled
  - There might be situations which are not yet handled
  - Code is not as nice as it should be
+
