@@ -73,7 +73,9 @@ public class AstahRepresentation {
     public IAttribute createValueAttribute(IClass owner, String name, IClass type, String definition) {
         try {
             var attribute = modelEditor.createValueAttribute(owner, name, type);
-            attribute.setDefinition(definition);
+            if (definition != null) {
+                attribute.setDefinition(definition);
+            }
             return attribute;
         } catch (InvalidEditingException e) {
             throw new AstahRuntimeException(e);

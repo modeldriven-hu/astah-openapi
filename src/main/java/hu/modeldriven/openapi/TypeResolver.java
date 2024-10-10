@@ -87,14 +87,16 @@ public class TypeResolver {
 
         var block = (IBlock) iClass;
 
-        for (Map.Entry<String, Schema> property : schema.getProperties().entrySet()) {
-            var name = property.getKey();
-            var type = getOrCreate(block, property.getKey(), property.getValue());
+        if (schema.getProperties() != null){
+            for (Map.Entry<String, Schema> property : schema.getProperties().entrySet()) {
+                var name = property.getKey();
+                var type = getOrCreate(block, property.getKey(), property.getValue());
 
-            if (type instanceof IBlock typeBlock) {
-                astah.createPartRelationship(block, name, typeBlock);
-            } else {
-                astah.createValueAttribute(block, name, type);
+                if (type instanceof IBlock typeBlock) {
+                    astah.createPartRelationship(block, name, typeBlock);
+                } else {
+                    astah.createValueAttribute(block, name, type);
+                }
             }
         }
 

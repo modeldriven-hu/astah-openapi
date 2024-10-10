@@ -22,7 +22,7 @@ public class AppTest {
     public void testParse() throws Exception {
         var parser = new OpenAPIParser();
         //var result = parser.readLocation("https://petstore3.swagger.io/api/v3/openapi.json", null, null);
-        var result = parser.readLocation("C:/home/digivet2.yaml", null, null);
+        var result = parser.readLocation("C:/home/openapi2.yaml", null, null);
         var openAPIObject = new OpenAPIObject(result.getOpenAPI());
         var astahRepresentation = Mockito.mock(AstahRepresentation.class);
 
@@ -35,6 +35,7 @@ public class AppTest {
         when(astahRepresentation.findElementByPath(any(), eq("String"), any())).thenReturn(Mockito.mock(IValueType.class));
         when(astahRepresentation.findElementByPath(any(), eq("DateTime"), any())).thenReturn(Mockito.mock(IValueType.class));
         when(astahRepresentation.findElementByPath(any(), eq("Number"), any())).thenReturn(Mockito.mock(IValueType.class));
+        when(astahRepresentation.findElementByPath(any(), eq("UUID"), any())).thenReturn(Mockito.mock(IValueType.class));
 
         var store = new ModelElementsStore();
         var resolver = new TypeResolver(astahRepresentation, store);

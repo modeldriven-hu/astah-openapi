@@ -66,7 +66,7 @@ public class PathObject {
     }
 
     private IClass createRequest(Operation operation, BuildContext context) {
-        var name = StringUtils.capitalize(operation.getOperationId() + "Request");
+        var name = StringUtils.capitalize(operation.getOperationId() + " Request");
         var request = context.astah().createBlock(context.targetPackage(), name);
 
         context.astah().addStereotype(request, "HTTP Request");
@@ -96,7 +96,7 @@ public class PathObject {
     }
 
     private IClass createResponse(Operation operation, BuildContext context) {
-        var name = StringUtils.capitalize(operation.getOperationId() + "Response");
+        var name = StringUtils.capitalize(operation.getOperationId() + " Response");
         var response = context.astah().createBlock(context.targetPackage(), name);
 
         context.astah().addStereotype(response, "HTTP Response");
