@@ -30,23 +30,32 @@ public class SchemaObject {
         return schemaProperties.values().stream().allMatch(property -> property.isResolvable(resolvedSchemaNames));
     }
 
-    public void build(String name, BuildContext context) {
+    public void buildSchema(String name, BuildContext context) {
 
         AstahLogger.log("[ComponentSchemas.class] Building schema: " + name);
 
         var block = context.astah().createBlock(context.targetPackage(), name);
         context.store().put(name, block);
+    }
 
-        // Create inner parts of the block, like fields
+    public void buildProperties(String name, BuildContext context) {
 
-        for (var entry : schemaProperties.entrySet()) {
+        var schemaBlock = context.store().get(name);
 
-            AstahLogger.log("\t[SchemaObject] Building property: " + entry.getKey());
+        if (schemaBlock instanceof IBlock block) {
 
-            SchemaProperty schemaProperty = entry.getValue();
-            schemaProperty.build(entry.getKey(), schema, block, context);
+            for (var entry : schemaProperties.entrySet()) {
 
-            AstahLogger.log("\t[SchemaObject] Building Completed");
+                AstahLogger.log("\t[SchemaObject] Building property: " + entry.getKey());
+
+                SchemaProperty schemaProperty = entry.getValue();
+                schemaProperty.build(entry.getKey(), schema, block, context);
+
+                AstahLogger.log("\t[SchemaObject] Building Completed");
+            }
+
+        } else {
+            AstahLogger.log("\t[SchemaBlock] element was not a block: " + schemaBlock);
         }
     }
 
