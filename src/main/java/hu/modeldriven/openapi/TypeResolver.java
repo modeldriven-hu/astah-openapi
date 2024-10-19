@@ -27,7 +27,7 @@ public class TypeResolver {
     public void createTypesIfNotExists() {
         var typePackage = astah.findOrCreatePackage(OPEN_API_PATH);
 
-        Stream.of("DateTime", "String", "Boolean", "Integer", "Number", "UUID", "Map", "Email", "Password")
+        Stream.of("DateTime", "String", "Boolean", "Integer", "Number", "UUID", "Map", "Email", "Password", "Object")
                 .forEach(name -> {
                     if (findByTypeName(astah, name) == null) {
                         astah.createValueType(typePackage, name);
@@ -60,9 +60,7 @@ public class TypeResolver {
         if (hasArrayReference(schema)) {
             return store.get(getReferenceTypeNameOfArray(schema));
         } else if (hasArrayObject(schema)) {
-            // FIXME not implemented
-            AstahLogger.log("Arrays containing objects not implemented");
-            return null;
+            return getCoreTypeOfArray(schema);
         } else if (hasArrayArray(schema)) {
             // FIXME not implemented
             AstahLogger.log("Arrays containing arrays not implemented");
@@ -115,6 +113,7 @@ public class TypeResolver {
     private IClass resolveCoreType(Schema<?> schema) {
 
         return switch (schema) {
+            case ObjectSchema o -> findByTypeName(astah, "Object");
             case EmailSchema e -> findByTypeName(astah, "Email");
             case PasswordSchema p -> findByTypeName(astah, "Password");
             case MapSchema m -> findByTypeName(astah, "Map");

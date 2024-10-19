@@ -6,10 +6,9 @@ import io.swagger.v3.oas.models.media.ObjectSchema;
 
 import java.util.Collections;
 import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-public class SchemaObject {
+public class SchemaObject implements BuildableSchema{
 
     private final ObjectSchema schema;
     private final Map<String, SchemaProperty> schemaProperties;
@@ -26,37 +25,34 @@ public class SchemaObject {
                         ));
     }
 
-    public boolean isResolvable(Set<String> resolvedSchemaNames) {
-        return schemaProperties.values().stream().allMatch(property -> property.isResolvable(resolvedSchemaNames));
-    }
-
+    @Override
     public void buildSchema(String name, BuildContext context) {
 
-        AstahLogger.log("[ComponentSchemas.class] Building schema: " + name);
+        AstahLogger.log("[SchemaObject.class] Building schema: " + name);
 
         var block = context.astah().createBlock(context.targetPackage(), name);
         context.store().put(name, block);
     }
 
+    @Override
     public void buildProperties(String name, BuildContext context) {
 
         var schemaBlock = context.store().get(name);
 
-        if (schemaBlock instanceof IBlock block) {
-
-            for (var entry : schemaProperties.entrySet()) {
-
-                AstahLogger.log("\t[SchemaObject] Building property: " + entry.getKey());
-
-                SchemaProperty schemaProperty = entry.getValue();
-                schemaProperty.build(entry.getKey(), schema, block, context);
-
-                AstahLogger.log("\t[SchemaObject] Building Completed");
-            }
-
-        } else {
+        if (!(schemaBlock instanceof IBlock block)) {
             AstahLogger.log("\t[SchemaBlock] element was not a block: " + schemaBlock);
+            return;
         }
-    }
+
+        for (var entry : schemaProperties.entrySet()) {
+
+            AstahLogger.log("\t[SchemaObject] Building property: " + entry.getKey());
+
+            SchemaProperty schemaProperty = entry.getValue();
+            schemaProperty.build(entry.getKey(), schema, block, context);
+
+            AstahLogger.log("\t[SchemaObject] Building Completed");
+        }
+     }
 
 }

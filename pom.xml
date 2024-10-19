@@ -7,7 +7,7 @@
         <plugin.install>true</plugin.install>
         <astah.version>1.1</astah.version>
         <astah.edition>sysml</astah.edition>
-        <astah.path>/usr/lib/astah_sysml_9</astah.path>
+        <astah.path>C:/Program Files/astah_sysml</astah.path>
     </properties>
     <modelVersion>4.0.0</modelVersion>
     <groupId>hu.modeldriven</groupId>
