@@ -36,7 +36,8 @@ public class SchemaProperty {
         var astah = context.astah();
         var type = context.typeResolver().getOrCreate(owner, name, schema);
 
-        if (type == null && !(schema instanceof ObjectSchema || schema instanceof ArraySchema)) {
+        if (type == null) {
+            context.typeResolver().getOrCreate(owner, name, schema);
             AstahLogger.log("***** [SchemaProperty.class] Type not supported: " + schema + " ,skipping....");
             return;
         }

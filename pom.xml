@@ -120,7 +120,6 @@
                     <encoding>UTF-8</encoding>
                     <source>21</source>
                     <target>21</target>
-                    <release>21</release>
                 </configuration>
             </plugin>
             <plugin>
@@ -134,7 +133,7 @@
             <plugin>
                 <groupId>com.change_vision.astah</groupId>
                 <artifactId>astah-maven-plugin</artifactId>
-                <version>1.0.0</version>
+                <version>1.0.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.felix</groupId>
